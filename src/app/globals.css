@@ -1,26 +1,47 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 
+@theme {
+  --breakpoint-*: initial;
+  --breakpoint-sm: 480px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 976px;
+} */
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+
+  --background: #fff;
+  --foreground: #2B2B2C;
+  --font-family: "Inter", sans-serif;  
+  /* --font-size: 10px; */
+  --line-height: 1;
+  --letter-spacing: 0em;
+  --text-color: #2B2B2C;
+  --link-color: #2B2B2C;
+  --link-hover-color: #2B2B2C;
+  --spacing: 15px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
+
+@media (max-width: 768px) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --font-size: 10px;
   }
 }
 
+
+
+ 
+
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
+  font-family: var(--font-family);
+  /* font-size: var(--font-size); */
+  font-weight: var(--font-weight);
+  line-height: var(--line-height);
+  letter-spacing: var(--letter-spacing);
+} 
