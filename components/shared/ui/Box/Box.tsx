@@ -6,12 +6,17 @@ type Props = {
   className?: string;
   debug?: boolean;
   as?: string;
+  ref?: React.RefObject<HTMLElement | null>;
 };
 const Box = (props: Props) => {
-  const { children, className, debug = false, as = "div" } = props;
+  const { children, className, debug = false, as = "div", ref } = props;
 
   return createElement(as, {
-    className: clsx("flex", className, debug && "border border-red-500"),
+    ref,
+    className: clsx(
+      className !== "" ? className : "flex",
+      debug && "border border-red-500"
+    ),
     children,
   });
 };

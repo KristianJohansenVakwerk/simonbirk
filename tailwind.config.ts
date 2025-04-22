@@ -21,6 +21,7 @@ module.exports = {
         unitsPerEm: 2048,
       },
     },
+
     fontSize: {
       base: "11px",
       xl: "20px",
@@ -33,7 +34,10 @@ module.exports = {
         "20": "repeat(20, minmax(0, 1fr))",
       },
       spacing: {
-        "1": "15px",
+        "1": "16px",
+        "2": "32px",
+        "75": "75px",
+        "100": "100px",
       },
     },
   },

@@ -8,12 +8,21 @@ type Props = {
   debug?: boolean;
   as?: string;
   size?: "base" | "xl";
+  ref?: React.RefObject<HTMLElement | null>;
 };
 const Text = (props: Props) => {
-  const { children, className, size = "base", debug = false, as = "p" } = props;
+  const {
+    children,
+    className,
+    size = "base",
+    debug = false,
+    as = "p",
+    ref,
+  } = props;
 
   return (
     <Box
+      ref={ref}
       className={clsx([
         `font-sans leading-none capsize gap-0`,
         getTextSize(size),

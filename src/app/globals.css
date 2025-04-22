@@ -34,7 +34,12 @@
 
 
 
- 
+ html, body {
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+  -webkit-bounce: none;
+  height: 100%;
+ }
 
 body {
   background-color: var(--background);
@@ -44,4 +49,7 @@ body {
   font-weight: var(--font-weight);
   line-height: var(--line-height);
   letter-spacing: var(--letter-spacing);
+  position: relative;
+  height: 100%;
+  
 } 

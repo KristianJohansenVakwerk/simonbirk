@@ -15,14 +15,14 @@ export const MenuItemTexts = (props: Props) => {
   const { title, year, index } = props;
 
   return (
-    <div className="flex flex-col justify-between h-full">
-      <MenuItemSticky index={index} className={"self-start"}>
-        {year}
-      </MenuItemSticky>
-      <MenuItemSticky index={index} className={"self-end"}>
-        {title}
-      </MenuItemSticky>
-    </div>
+    <>
+      <Box className={"col-span-1"}>
+        <MenuItemSticky index={index}>{year}</MenuItemSticky>
+      </Box>
+      <Box className={"col-span-2 flex justify-end items-end pr-1"}>
+        <MenuItemSticky index={index}>{title}</MenuItemSticky>
+      </Box>
+    </>
   );
 };
 
@@ -40,20 +40,28 @@ const MenuItemSticky = ({
   const ref = useRef<HTMLDivElement>(null);
   const [isSticky, setIsSticky] = useState(false);
   const initialPosRef = useRef<number | null>(null);
+  const spacer = 15;
+  const topOffset = 75;
 
   useEffect(() => {
     if (ref.current && !initialPosRef.current) {
       initialPosRef.current =
         ref.current.getBoundingClientRect().top + window.scrollY;
     }
-
+    let ticking = false;
     const handleScroll = () => {
-      if (ref.current) {
-        const scrollPosition = window.scrollY;
-
-        console.log(initialPosRef.current, scrollPosition);
-        if (initialPosRef.current)
-          setIsSticky(scrollPosition >= initialPosRef?.current - 75);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (ref.current && initialPosRef?.current) {
+            const scrollPosition = window.scrollY;
+            setIsSticky(
+              scrollPosition >=
+                initialPosRef.current - (index * spacer + topOffset)
+            );
+          }
+          ticking = false;
+        });
+        ticking = true;
       }
     };
 
@@ -67,6 +75,15 @@ const MenuItemSticky = ({
   }, []);
 
   return (
-    <Text className={clsx(className, isSticky && "sticky")}>{children}</Text>
+    <div
+      style={{
+        position: isSticky ? "fixed" : "static",
+        top: `calc(${index * spacer}px + ${topOffset}px)`,
+      }}
+    >
+      <Text ref={ref} className={clsx(className)}>
+        {children}
+      </Text>
+    </div>
   );
 };
