@@ -1,16 +1,16 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
+    './pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './components/**/*.{js,ts,jsx,tsx,mdx}',
 
     // Or if using `src` directory:
-    "./src/**/*.{js,ts,jsx,tsx,mdx}",
+    './src/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     fontFamily: {
-      sans: ["Inter", "sans-serif"],
+      sans: ['Inter', 'sans-serif'],
     },
     fontMetrics: {
       sans: {
@@ -23,24 +23,27 @@ module.exports = {
     },
 
     fontSize: {
-      base: "11px",
-      xl: "20px",
+      base: '11px',
+      xl: '20px',
     },
     lineHeight: {
-      none: "14px",
+      none: '14px',
     },
     extend: {
+      colors: {
+        hover: '#ADADAE',
+      },
       gridTemplateColumns: {
-        "20": "repeat(20, minmax(0, 1fr))",
+        '20': 'repeat(20, minmax(0, 1fr))',
       },
       spacing: {
-        "1": "16px",
-        "2": "32px",
-        "75": "75px",
-        "100": "100px",
+        '1': '16px',
+        '2': '32px',
+        '75': '75px',
+        '100': '100px',
       },
     },
   },
-  plugins: [require("tailwindcss-capsize")],
+  plugins: [require('tailwindcss-capsize')],
 };
 /** @type {import('tailwindcss').Config} */

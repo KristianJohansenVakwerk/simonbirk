@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import Box from "@components/shared/ui/Box/Box";
-import Text from "@components/shared/ui/Text/Text";
-import clsx from "clsx";
-import { useEffect, useRef, useState } from "react";
+import Box from '@components/shared/ui/Box/Box';
+import Text from '@components/shared/ui/Text/Text';
+import clsx from 'clsx';
+import { useEffect, useRef, useState } from 'react';
 
 type Props = {
   title: string;
@@ -16,10 +16,10 @@ export const MenuItemTexts = (props: Props) => {
 
   return (
     <>
-      <Box className={"col-span-1"}>
+      <Box className={'col-span-1'}>
         <MenuItemSticky index={index}>{year}</MenuItemSticky>
       </Box>
-      <Box className={"col-span-2 flex justify-end items-end pr-1"}>
+      <Box className={'col-span-2 flex items-end justify-end pr-1'}>
         <MenuItemSticky index={index}>{title}</MenuItemSticky>
       </Box>
     </>
@@ -30,7 +30,7 @@ export default MenuItemTexts;
 
 const MenuItemSticky = ({
   children,
-  className = "",
+  className = '',
   index,
 }: {
   children: React.ReactNode;
@@ -56,7 +56,7 @@ const MenuItemSticky = ({
             const scrollPosition = window.scrollY;
             setIsSticky(
               scrollPosition >=
-                initialPosRef.current - (index * spacer + topOffset)
+                initialPosRef.current - (index * spacer + topOffset),
             );
           }
           ticking = false;
@@ -67,21 +67,24 @@ const MenuItemSticky = ({
 
     handleScroll();
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener('scroll', handleScroll, { passive: true });
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
   return (
     <div
       style={{
-        position: isSticky ? "fixed" : "static",
+        position: isSticky ? 'fixed' : 'static',
         top: `calc(${index * spacer}px + ${topOffset}px)`,
       }}
     >
-      <Text ref={ref} className={clsx(className)}>
+      <Text
+        ref={ref}
+        className={clsx(className)}
+      >
         {children}
       </Text>
     </div>

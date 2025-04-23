@@ -1,7 +1,5 @@
-import Box from "@components/shared/ui/Box/Box";
-
 const HomePage = () => {
-  return <Box>homepage</Box>;
+  return <div></div>;
 };
 
 export default HomePage;
