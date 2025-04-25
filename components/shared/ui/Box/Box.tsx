@@ -1,5 +1,5 @@
-import clsx from "clsx";
-import { AllHTMLAttributes, createElement } from "react";
+import clsx from 'clsx';
+import { AllHTMLAttributes, createElement } from 'react';
 
 type Props = {
   children: React.ReactNode;
@@ -7,13 +7,13 @@ type Props = {
   debug?: boolean;
   as?: string;
   ref?: React.RefObject<HTMLElement | null>;
-} & Omit<AllHTMLAttributes<HTMLDivElement>, "className" | "width" | "height">;
+} & Omit<AllHTMLAttributes<HTMLDivElement>, 'className' | 'width' | 'height'>;
 const Box = (props: Props) => {
   const {
     children,
     className,
     debug = false,
-    as = "div",
+    as = 'div',
     ref,
     ...restProps
   } = props;
@@ -21,13 +21,15 @@ const Box = (props: Props) => {
   return createElement(as, {
     ref,
     className: clsx(
-      className !== "" ? className : "flex",
+      className !== '' ? className : 'flex',
 
-      debug && "border border-red-500"
+      debug && 'border border-red-500',
     ),
     ...restProps,
     children,
   });
 };
+
+Box.displayName = 'Box';
 
 export default Box;
