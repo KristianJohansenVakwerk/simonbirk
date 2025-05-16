@@ -10,11 +10,20 @@
   },
   "dependencies": {
     "@capsizecss/core": "^4.1.2",
+    "@sanity/dashboard": "^4.1.3",
+    "@sanity/icons": "^3.7.0",
+    "@sanity/image-url": "^1.1.0",
+    "@sanity/vision": "^3.88.3",
     "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
     "motion": "^12.9.0",
     "next": "15.2.4",
+    "next-sanity": "^9.11.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "sanity": "^3.88.3",
+    "sonner": "^2.0.3",
+    "styled-components": "^6.1.18"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

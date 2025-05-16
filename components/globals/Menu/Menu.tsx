@@ -3,16 +3,15 @@ import Box from '@components/shared/ui/Box/Box';
 import MenuItemTexts from './MenuItemTexts';
 import { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
+import { usePathname } from 'next/navigation';
+import { QueryProjectsResult } from '@/sanity/types/sanity.types';
+import CustomImage from '@/components/shared/ui/Image/Image';
 
 type Props = {
-  data: {
-    title: string;
-    year: string;
-    img: string;
-  }[];
+  data: QueryProjectsResult | null;
   handleMouseEnter: (index: number) => void;
   handleMouseLeave: () => void;
-  handleClick: () => void;
+  handleClick: (url: string) => void;
   activeIndex: number | null;
 };
 export const Menu = (props: Props) => {
@@ -39,24 +38,26 @@ export const Menu = (props: Props) => {
 
   return (
     <>
-      {data.map((item, index) => {
+      {data?.map((item, index) => {
         const titleRef = useRef<HTMLDivElement>(null);
 
         return (
           <Box
-            key={item.title + index}
+            key={item._id}
             className={clsx([
               'relative mb-2 grid cursor-pointer grid-cols-6 justify-between transition-colors duration-300 last:mb-0 hover:text-hover',
               activeIndex === index && 'text-hover',
             ])}
             onMouseEnter={() => handleMouseEnter(index)}
             onMouseLeave={handleMouseLeave}
-            onClick={handleClick}
+            onClick={() =>
+              handleClick(`/projects/${item?.slug?.current}` || '')
+            }
           >
             <Box className={'col-span-3'}>
               <MenuItemTexts
-                title={item.title}
-                year={item.year}
+                title={item?.title || ''}
+                year={item?.year || ''}
                 index={index}
                 parentWidth={parentWidth}
                 ref={titleRef}
@@ -66,11 +67,8 @@ export const Menu = (props: Props) => {
               ref={parentRef}
               className={'col-span-3'}
             >
-              <img
-                src={item.img}
-                alt={item.title}
-                width={245}
-                height={311}
+              <CustomImage
+                asset={item?.thumbnail}
                 className="h-full w-full object-cover"
               />
             </Box>

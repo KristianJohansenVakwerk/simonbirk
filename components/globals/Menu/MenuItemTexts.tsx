@@ -4,6 +4,8 @@ import Box from '@components/shared/ui/Box/Box';
 import Text from '@components/shared/ui/Text/Text';
 import clsx from 'clsx';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { motion } from 'motion/react';
+import { formatDate } from '@/utils/utils';
 
 type Props = {
   title: string;
@@ -34,23 +36,23 @@ export const MenuItemTexts = (props: Props) => {
         className={'grid h-full cursor-pointer grid-cols-3 hover:text-hover'}
         style={{ visibility: !scrolledPassed ? 'visible' : 'hidden' }}
       >
-        <Box className={'col-span-1'}>
+        <Box className={'col-span-2'}>
           <MenuItemSticky
             index={index}
             handleSticky={handleSticky}
             type={'year'}
           >
-            {year}
+            {title}
           </MenuItemSticky>
         </Box>
-        <Box className={'col-span-2 flex items-end justify-end pr-1'}>
+        <Box className={'col-span-1 flex items-end justify-end pr-1'}>
           <span ref={ref ? ref : undefined}>
             <MenuItemSticky
               index={index}
               handleSticky={handleSticky}
               type={'title'}
             >
-              {title}
+              {formatDate(year)}
             </MenuItemSticky>
           </span>
         </Box>
@@ -64,17 +66,19 @@ export const MenuItemTexts = (props: Props) => {
           className={'fixed grid grid-cols-3 hover:text-hover'}
           style={{ top: `calc(${index * 15}px + 75px)`, width: parentWidth }}
         >
-          <Box className={'col-span-1'}>
-            <Text>{year}</Text>
-          </Box>
-          <Box className={'col-span-2 flex items-end justify-end pr-1'}>
+          <Box className={'col-span-2'}>
             <Text>{title}</Text>
+          </Box>
+          <Box className={'col-span-1 flex items-end justify-end pr-1'}>
+            <Text>{formatDate(year)}</Text>
           </Box>
         </Box>
       </Box>
     </>
   );
 };
+
+export const MotionBox = motion.create(Box);
 
 export default MenuItemTexts;
 
