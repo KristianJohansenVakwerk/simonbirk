@@ -46,7 +46,8 @@ export default defineConfig({
   plugins: [
     presentationTool({
       previewUrl: {
-        origin: 'http://localhost:3000/',
+        origin:
+          process.env.NEXT_PUBLIC_SANITY_STUDIO_URL || 'http://localhost:3000/',
         previewMode: { enable: '/api/draft-mode/enable' },
       },
       resolve: {
