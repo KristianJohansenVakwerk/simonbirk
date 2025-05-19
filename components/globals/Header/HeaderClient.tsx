@@ -7,7 +7,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import Box from '@components/shared/ui/Box/Box';
 import { usePathname, useRouter } from 'next/navigation';
-import MenuFull from '../Menu/MenuFull';
+
 import {
   QueryProjectsResult,
   QuerySettingsResult,
@@ -58,7 +58,6 @@ const HeaderClient = (props: Props) => {
   const { projects, settings } = props;
 
   const [showMenu, setShowMenu] = useState(true);
-  const [showFullMenu, setShowFullMenu] = useState(false);
   const [showThumbs, setShowThumbs] = useState(false);
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -106,7 +105,7 @@ const HeaderClient = (props: Props) => {
         }, 2000);
       }, 3000);
     }
-  }, []);
+  }, [projects]);
 
   const handleClick = useCallback((url: string) => {
     setShowMenu(false);
@@ -251,7 +250,7 @@ const HeaderClient = (props: Props) => {
         </Box>
 
         {settings &&
-          settings.info?.map((item, index) => {
+          settings.info?.map((item) => {
             return (
               <Box
                 className="sticky top-75 col-span-3 flex h-fit flex-row gap-1"

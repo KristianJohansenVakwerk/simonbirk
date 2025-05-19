@@ -3,7 +3,6 @@ import Box from '@components/shared/ui/Box/Box';
 import MenuItemTexts from './MenuItemTexts';
 import { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
-import { usePathname } from 'next/navigation';
 import { QueryProjectsResult } from '@/sanity/types/sanity.types';
 import CustomImage from '@/components/shared/ui/Image/Image';
 
@@ -19,6 +18,11 @@ export const Menu = (props: Props) => {
     props;
   const [parentWidth, setParentWidth] = useState(0);
   const parentRef = useRef<HTMLDivElement>(null);
+  const titleRefs = useRef<(HTMLElement | null)[]>([]);
+
+  useEffect(() => {
+    titleRefs.current = data?.map(() => null) || [];
+  }, [data]);
 
   // Get the width of the parent element to set the width of the fixed text elements based on the image container
   useEffect(() => {
@@ -39,8 +43,6 @@ export const Menu = (props: Props) => {
   return (
     <>
       {data?.map((item, index) => {
-        const titleRef = useRef<HTMLDivElement>(null);
-
         return (
           <Box
             key={item._id}
@@ -60,7 +62,9 @@ export const Menu = (props: Props) => {
                 year={item?.year || ''}
                 index={index}
                 parentWidth={parentWidth}
-                ref={titleRef}
+                ref={(el: HTMLDivElement | null) =>
+                  (titleRefs.current[index] = el)
+                }
               />
             </Box>
             <Box

@@ -18,16 +18,19 @@ const Box = (props: Props) => {
     ...restProps
   } = props;
 
-  return createElement(as, {
-    ref,
-    className: clsx(
-      className !== '' ? className : 'flex',
+  return createElement(
+    as,
+    {
+      ref,
+      className: clsx(
+        className !== '' ? className : 'flex',
 
-      debug && 'border border-red-500',
-    ),
-    ...restProps,
+        debug && 'border border-red-500',
+      ),
+      ...restProps,
+    },
     children,
-  });
+  );
 };
 
 Box.displayName = 'Box';

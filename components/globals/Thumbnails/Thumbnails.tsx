@@ -2,7 +2,7 @@
 import Box from '@components/shared/ui/Box/Box';
 import { AnimatePresence, motion } from 'framer-motion';
 import clsx from 'clsx';
-import React, { useEffect } from 'react';
+import React from 'react';
 import CustomImage from '@/components/shared/ui/Image/Image';
 import { QueryProjectsResult } from '@/sanity/types/sanity.types';
 

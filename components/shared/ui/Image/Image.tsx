@@ -28,7 +28,7 @@ const CustomImage = (props: Props) => {
         alt={''}
         width={width}
         height={height}
-        priority
+        priority={priority}
         className={className}
       />
     );

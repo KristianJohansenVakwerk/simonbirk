@@ -1,7 +1,6 @@
 'use client';
 import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 import { disableDraftMode } from '@/app/actions';
 
 export function DisableDraftMode() {

@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { usePathname } from 'next/navigation';
 import React, { useEffect } from 'react';
 import { getScrollPosition, saveScrollPosition } from '../../../utils/store';

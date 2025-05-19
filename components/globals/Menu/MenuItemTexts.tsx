@@ -12,7 +12,7 @@ type Props = {
   year: string;
   index: number;
   parentWidth: number;
-  ref: React.RefObject<HTMLDivElement | null>;
+  ref: any;
 };
 
 export const MenuItemTexts = (props: Props) => {
@@ -46,7 +46,7 @@ export const MenuItemTexts = (props: Props) => {
           </MenuItemSticky>
         </Box>
         <Box className={'col-span-1 flex items-end justify-end pr-1'}>
-          <span ref={ref ? ref : undefined}>
+          <span ref={ref ? ref : null}>
             <MenuItemSticky
               index={index}
               handleSticky={handleSticky}

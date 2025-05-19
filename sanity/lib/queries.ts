@@ -16,6 +16,12 @@ export const queryProjects = defineQuery(`
   }
 `);
 
+export const queryProjectSlugs = defineQuery(`
+  *[_type == 'project' ] | order(year desc) {
+    slug
+  }
+`);
+
 export const queryProjectBySlug = defineQuery(`
   *[_type == 'project' && slug.current == $slug][0]{
     _id,

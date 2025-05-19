@@ -1,5 +1,6 @@
 import { sanityFetch } from '@/sanity/lib/live';
-import { queryProjectBySlug, queryProjects } from '@/sanity/lib/queries';
+import { queryProjectBySlug, queryProjectSlugs } from '@/sanity/lib/queries';
+
 import ProjectPage from '@components/pages/ProjectPage';
 import { notFound } from 'next/navigation';
 
@@ -9,13 +10,13 @@ type Props = {
 
 export const generateStaticParams = async () => {
   const { data: projects } = await sanityFetch({
-    query: queryProjects,
+    query: queryProjectSlugs,
     perspective: 'published',
     stega: false,
   });
 
-  return projects.map((project: any) => ({
-    slug: project.slug.current,
+  return projects.map((project: { slug: { current: string } }) => ({
+    slug: project?.slug?.current,
   }));
 };
 
