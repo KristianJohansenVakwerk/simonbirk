@@ -21,7 +21,6 @@ export default async function RootLayout({
 }>) {
   const { isEnabled: isDraftMode } = await draftMode();
 
-  console.log('isDraftMode', isDraftMode);
   return (
     <html lang="en">
       <body>
