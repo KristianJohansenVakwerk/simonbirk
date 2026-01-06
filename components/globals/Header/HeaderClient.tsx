@@ -7,58 +7,25 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import Box from '@components/shared/ui/Box/Box';
 import { usePathname, useRouter } from 'next/navigation';
+import { checkIfBottom, formatDate } from '@/utils/utils';
 
 import {
   QueryProjectsResult,
   QuerySettingsResult,
 } from '@/sanity/types/sanity.types';
-import { formatDate } from '@/utils/utils';
 
 type Props = {
   projects: QueryProjectsResult | null;
   settings: QuerySettingsResult | null;
 };
 
-const variants = {
-  show: {
-    opacity: 1,
-    transition: {
-      duration: 0.2,
-      delay: 0.5,
-      ease: 'easeInOut',
-    },
-  },
-  hide: {
-    opacity: 0,
-    transition: {
-      duration: 0.2,
-      ease: 'easeInOut',
-    },
-  },
-};
-
-const menuVariants = {
-  show: {
-    opacity: 1,
-    transition: {
-      duration: 0.2,
-      ease: 'easeInOut',
-    },
-  },
-  hide: {
-    opacity: 0,
-    transition: {
-      duration: 0.2,
-      ease: 'easeInOut',
-    },
-  },
-};
+import { variants, menuVariants } from '@/utils/animationUtils';
 
 const HeaderClient = (props: Props) => {
   const { projects, settings } = props;
 
   const [showMenu, setShowMenu] = useState(true);
-  const [showThumbs, setShowThumbs] = useState(false);
+  const [showThumbs, setShowThumbs] = useState(true);
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const timerOutRef = useRef<NodeJS.Timeout | null>(null);
@@ -122,6 +89,7 @@ const HeaderClient = (props: Props) => {
   }, [pathname]);
 
   const handleMouseEnter = useCallback((index: number) => {
+    console.log('index', index);
     setActiveIndex(index);
     setShowThumbs(true);
   }, []);
@@ -161,54 +129,32 @@ const HeaderClient = (props: Props) => {
 
   return (
     <>
-      <header className="height-auto relative z-20 grid grid-cols-20 gap-1">
+      <header className="height-auto debug relative z-20 grid grid-cols-20 gap-1">
         <Link
           href={'/'}
           className={'sticky top-75 col-span-2 flex h-fit flex-row pl-1'}
         >
           <Text>Simon Birk</Text>
         </Link>
-        <Box
-          className={'relative col-span-6 mt-75'}
+        <div
+          className="col-span-6 mt-75"
           onMouseEnter={handleContainerMouseEnter}
           onMouseLeave={handleContainerMouseLeave}
         >
-          {/* <span className={'absolute left-[-15px] top-[2px]'}>
-            <svg
-              width="8"
-              height="6"
-              viewBox="0 0 8 6"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M4 6L0.535898 0L7.4641 0L4 6Z"
-                fill={showMenu ? '#ADADAE' : '#2B2B2C'}
-              />
-            </svg>
-          </span> */}
           <AnimatePresence mode="wait">
             {showMenu ? (
-              <motion.div
+              <Menu
                 key={`${showMenu}`}
-                className={'min-h-screen w-[100%]'}
+                data={projects}
+                handleMouseEnter={handleMouseEnter}
+                handleMouseLeave={handleMouseLeave}
+                handleClick={handleClick}
+                activeIndex={activeIndex}
                 variants={menuVariants}
                 initial={'hide'}
                 animate={'show'}
                 exit={'hide'}
-              >
-                <Menu
-                  data={projects}
-                  handleMouseEnter={handleMouseEnter}
-                  handleMouseLeave={handleMouseLeave}
-                  handleClick={handleClick}
-                  activeIndex={activeIndex}
-                />
-
-                <div
-                  className={'pointer-event-none col-span-6 h-[100vh]'}
-                ></div>
-              </motion.div>
+              />
             ) : (
               <motion.div
                 key={`${showMenu}`}
@@ -247,7 +193,7 @@ const HeaderClient = (props: Props) => {
               </motion.div>
             )}
           </AnimatePresence>
-        </Box>
+        </div>
 
         {settings &&
           settings.info?.map((item) => {
@@ -295,11 +241,3 @@ const HeaderClient = (props: Props) => {
 };
 
 export default HeaderClient;
-
-const checkIfBottom = () => {
-  const scrollPosition = window.scrollY;
-  const wh = window.innerHeight;
-  const scrollHeight = document.documentElement.scrollHeight;
-
-  return Math.floor(scrollPosition + wh) === scrollHeight;
-};

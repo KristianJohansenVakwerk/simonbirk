@@ -11,3 +11,11 @@ export const formatDate = (date: string, dateFormat?: string) => {
 
   return format(new Date(date), f);
 };
+
+export const checkIfBottom = () => {
+  const scrollPosition = window.scrollY;
+  const wh = window.innerHeight;
+  const scrollHeight = document.documentElement.scrollHeight;
+
+  return Math.floor(scrollPosition + wh) === scrollHeight;
+};
