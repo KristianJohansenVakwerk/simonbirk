@@ -22,22 +22,18 @@ export default async function RootLayout({
   const { isEnabled: isDraftMode } = await draftMode();
 
   return (
-    <html lang="en">
-      <body>
-        <HeaderServer />
-        {isDraftMode && (
-          <>
-            <VisualEditing />
-            <DisableDraftMode />
-          </>
-        )}
+    <>
+      <HeaderServer />
+      {isDraftMode && (
+        <>
+          <VisualEditing />
+          <DisableDraftMode />
+        </>
+      )}
 
-        <SanityLive onError={handleError} />
+      <SanityLive onError={handleError} />
 
-        <main>
-          <PageTransition>{children}</PageTransition>
-        </main>
-      </body>
-    </html>
+      <main>{children}</main>
+    </>
   );
 }

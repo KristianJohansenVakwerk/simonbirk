@@ -45,7 +45,6 @@ const Thumbnails = (props: Props) => {
               initial={'initial'}
               animate={'show'}
               exit={'hide'}
-              priority={true}
             />
           </React.Fragment>
         ))}
