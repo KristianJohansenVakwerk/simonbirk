@@ -35,3 +35,16 @@ export const getRandomProjects = (
   const shuffled = [...projects].sort(() => Math.random() - 0.5);
   return shuffled.slice(0, Math.min(count, shuffled.length));
 };
+
+export const sanitizeVW = (sizes: number[] | null) => {
+  return sizes
+    ?.map(
+      (s, i) =>
+        `${
+          i === 0 || i === 1
+            ? `(max-width: ${i === 0 ? '768px' : '1280px'})`
+            : ''
+        } ${s}vw`,
+    )
+    .join(', ');
+};

@@ -12,7 +12,7 @@ export const queryProjects = defineQuery(`
     year,
     "thumbnail": thumbnail.asset->{
       ...
-    },
+    }
   }
 `);
 

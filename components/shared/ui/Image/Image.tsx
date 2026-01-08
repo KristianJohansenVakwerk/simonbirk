@@ -1,6 +1,7 @@
 import { SanityImageAsset } from '@/sanity/types/sanity.types';
 import { Image } from 'next-sanity/image';
 import { urlFor } from '@/sanity/lib/image';
+import { sanitizeVW } from '@/utils/utils';
 
 type Props = {
   asset: SanityImageAsset | null;
@@ -8,6 +9,7 @@ type Props = {
   className?: string;
   blur?: boolean;
   loadDone?: () => void | null;
+  vw?: number[];
 };
 
 const CustomImage = (props: Props) => {
@@ -17,6 +19,7 @@ const CustomImage = (props: Props) => {
     blur = false,
     loadDone = null,
     className = '',
+    vw = [],
   } = props;
 
   if (!asset) return null;
@@ -26,8 +29,10 @@ const CustomImage = (props: Props) => {
     height: 1000,
   };
 
-  const src = urlFor(asset)?.auto('format').url();
+  const src = urlFor(asset)?.format('webp').url();
   const blurSrc = urlFor(asset)?.width(24).height(24).blur(10).url();
+
+  const sizes = vw.length ? sanitizeVW(vw) : '50vw';
 
   if (asset?._id) {
     return (
@@ -40,10 +45,8 @@ const CustomImage = (props: Props) => {
         placeholder={blur ? 'blur' : 'empty'}
         blurDataURL={blurSrc}
         className={className}
-        sizes="
-            (max-width: 768px) 100vw,
-            (max-width: 1200px) 50vw,
-            40vw"
+        sizes={sizes}
+        quality={75}
         onLoad={() => (loadDone ? loadDone() : null)}
       />
     );

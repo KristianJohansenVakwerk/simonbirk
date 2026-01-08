@@ -4,10 +4,14 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import CustomImage from '@/components/shared/ui/Image/Image';
 import Box from '@/components/shared/ui/Box/Box';
 import { motion } from 'motion/react';
+import { useStore } from '@/store/store';
+import clsx from 'clsx';
 
-type Props = { projects: QueryProjectsResult | null; introEnd: () => void };
+type Props = { projects: QueryProjectsResult | null };
 const Intro = (props: Props) => {
-  const { projects, introEnd } = props;
+  const { projects } = props;
+
+  const { globalIntroDone, setGlobalIntroDone } = useStore((state) => state);
 
   const [loadedCount, setLoadedCount] = useState<number>(0);
   const [activeIndex, setActiveIndex] = useState<number>(0);
@@ -26,14 +30,14 @@ const Intro = (props: Props) => {
     hide: {
       opacity: 0,
       transition: {
-        duration: 0.4,
+        duration: 0.2,
         ease: [0.4, 0, 0.2, 1], // Custom easing for smoother feel
       },
     },
     show: {
       opacity: 1,
       transition: {
-        duration: 0.4,
+        duration: 0.2,
         ease: [0.4, 0, 0.2, 1], // Custom easing for smoother feel
       },
     },
@@ -77,10 +81,8 @@ const Intro = (props: Props) => {
 
             currentDelayRef.current = Math.max(
               currentDelayRef.current * speedFactorRef.current,
-              300,
+              200,
             );
-
-            console.log(currentDelayRef.current);
 
             // Schedule next transition
             scheduleNext();
@@ -104,18 +106,25 @@ const Intro = (props: Props) => {
 
   useEffect(() => {
     if (introDone) {
-      introEnd();
+      // introEnd();
+      setGlobalIntroDone(true);
     }
   }, [introDone]);
 
   const currentDelayRef = useRef<number>(1000);
-  const speedFactorRef = useRef<number>(0.9); // Slower acceleration for smoother feel
+  const speedFactorRef = useRef<number>(0.8); // Slower acceleration for smoother feel
 
   if (!projects || !projects.length) return <>No projects</>;
 
   return (
     <Box
-      className={'fixed right-0 top-0 z-10 h-full w-full will-change-transform'}
+      className={clsx(
+        'pointer-events-none fixed right-0 top-0 z-[99] h-full w-full bg-white will-change-transform',
+        {
+          'opacity-100': !globalIntroDone,
+          'opacity-0': globalIntroDone,
+        },
+      )}
     >
       {projects?.map((item, index) => (
         <React.Fragment key={item._id}>

@@ -8,6 +8,7 @@ import { VisualEditing } from 'next-sanity';
 import { SanityLive } from '@/sanity/lib/live';
 import { handleError } from './client-utils';
 import { DisableDraftMode } from '@/components/globals/DisableDraftMode/DisableDraftMode';
+import Intro from '@/components/globals/Intro/Intro';
 
 export const metadata: Metadata = {
   title: 'Photographer - Simon Birk',
@@ -24,6 +25,7 @@ export default async function RootLayout({
   return (
     <>
       <HeaderServer />
+
       {isDraftMode && (
         <>
           <VisualEditing />
