@@ -16,8 +16,8 @@ export const generateStaticParams = async () => {
   });
 
   return projects
-    .filter((project) => project.slug?.current)
-    .map((project) => ({
+    .filter((project: any) => project.slug?.current)
+    .map((project: any) => ({
       slug: project.slug!.current,
     }));
 };
