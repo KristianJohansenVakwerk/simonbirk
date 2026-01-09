@@ -19,16 +19,13 @@ export const MenuItemTexts = (props: Props) => {
   const { title, year, index, parentWidth, ref } = props;
   const [scrolledPassed, setScrolledPassed] = useState(false);
 
-  const handleSticky = useCallback(
-    (isSticky: boolean, index: number, type: 'year' | 'title') => {
-      if (type === 'title' && isSticky) {
-        setScrolledPassed(true);
-      } else {
-        setScrolledPassed(false);
-      }
-    },
-    [index],
-  );
+  const handleSticky = useCallback((isSticky: boolean) => {
+    if (isSticky) {
+      setScrolledPassed(true);
+    } else {
+      setScrolledPassed(false);
+    }
+  }, []);
 
   return (
     <>
@@ -40,7 +37,7 @@ export const MenuItemTexts = (props: Props) => {
           <MenuItemSticky
             index={index}
             handleSticky={handleSticky}
-            type={'year'}
+            type={'title'}
           >
             {title}
           </MenuItemSticky>
@@ -50,7 +47,7 @@ export const MenuItemTexts = (props: Props) => {
             <MenuItemSticky
               index={index}
               handleSticky={handleSticky}
-              type={'title'}
+              type={'year'}
             >
               {formatDate(year)}
             </MenuItemSticky>
@@ -58,7 +55,7 @@ export const MenuItemTexts = (props: Props) => {
         </Box>
       </Box>
 
-      <Box
+      {/* <Box
         className={'absolute left-0 top-0 z-10 col-span-3'}
         style={{ visibility: scrolledPassed ? 'visible' : 'hidden' }}
       >
@@ -73,7 +70,7 @@ export const MenuItemTexts = (props: Props) => {
             <Text>{formatDate(year)}</Text>
           </Box>
         </Box>
-      </Box>
+      </Box> */}
     </>
   );
 };
@@ -92,43 +89,45 @@ const MenuItemSticky = ({
   children: React.ReactNode;
   className?: string;
   index: number;
-  handleSticky: (
-    isSticky: boolean,
-    index: number,
-    type: 'year' | 'title',
-  ) => void;
+  handleSticky: (isSticky: boolean) => void;
   type: 'year' | 'title';
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [isSticky, setIsSticky] = useState(false);
+  const stickyPos = useRef<number | null>(null);
   const initialPosRef = useRef<number | null>(null);
   const spacer = 15;
   const topOffset = 75;
 
   useEffect(() => {
-    if (ref.current && !initialPosRef.current) {
+    if (ref.current && !initialPosRef.current && !stickyPos.current) {
       initialPosRef.current =
         ref.current.getBoundingClientRect().top + window.scrollY;
+
+      stickyPos.current = Math.round(
+        initialPosRef.current - (index * spacer + topOffset),
+      );
+
+      const isSticky = useCheckSticky(stickyPos.current);
+      setIsSticky(isSticky);
     }
+  }, []);
+
+  useEffect(() => {
     let ticking = false;
+
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          if (ref.current && initialPosRef?.current) {
-            const scrollPosition = window.scrollY;
-
-            setIsSticky(
-              scrollPosition >=
-                initialPosRef.current - (index * spacer + topOffset),
-            );
+          if (ref.current && initialPosRef?.current && stickyPos?.current) {
+            const isSticky = useCheckSticky(stickyPos.current);
+            setIsSticky(isSticky);
           }
           ticking = false;
         });
         ticking = true;
       }
     };
-
-    handleScroll();
 
     window.addEventListener('scroll', handleScroll, { passive: true });
 
@@ -139,10 +138,10 @@ const MenuItemSticky = ({
 
   useEffect(() => {
     // Check if the element is sticky and call the handleSticky function to update the view of the index item
-    if (isSticky) {
-      handleSticky(true, index, type);
+    if (isSticky && type === 'year') {
+      handleSticky(true);
     } else {
-      handleSticky(false, index, type);
+      handleSticky(false);
     }
   }, [isSticky]);
 
@@ -161,4 +160,10 @@ const MenuItemSticky = ({
       </Text>
     </div>
   );
+};
+
+const useCheckSticky = (stickyPos: number) => {
+  const scrollPosition = window.scrollY;
+  const disatanceToSticky = stickyPos - scrollPosition;
+  return Math.max(0, disatanceToSticky) === 0;
 };

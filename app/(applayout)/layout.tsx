@@ -8,6 +8,7 @@ import { VisualEditing } from 'next-sanity';
 import { SanityLive } from '@/sanity/lib/live';
 import { handleError } from './client-utils';
 import { DisableDraftMode } from '@/components/globals/DisableDraftMode/DisableDraftMode';
+import StoreInitializer from '@/components/globals/StoreInitializer/StoreInitializer';
 
 export const metadata: Metadata = {
   title: 'Photographer - Simon Birk',
@@ -22,22 +23,20 @@ export default async function RootLayout({
   const { isEnabled: isDraftMode } = await draftMode();
 
   return (
-    <html lang="en">
-      <body>
-        <HeaderServer />
-        {isDraftMode && (
-          <>
-            <VisualEditing />
-            <DisableDraftMode />
-          </>
-        )}
+    <>
+      <StoreInitializer />
+      <HeaderServer />
 
-        <SanityLive onError={handleError} />
+      {isDraftMode && (
+        <>
+          <VisualEditing />
+          <DisableDraftMode />
+        </>
+      )}
 
-        <main>
-          <PageTransition>{children}</PageTransition>
-        </main>
-      </body>
-    </html>
+      <SanityLive onError={handleError} />
+
+      <main>{children}</main>
+    </>
   );
 }

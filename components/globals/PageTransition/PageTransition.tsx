@@ -2,16 +2,18 @@
 
 import { usePathname } from 'next/navigation';
 import React, { useEffect } from 'react';
-import { getScrollPosition, saveScrollPosition } from '../../../utils/store';
+import { useStore } from '@/store/store';
 
 const PageTransition = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
+  const { saveScrollPosition, getScrollPosition } = useStore();
 
   useEffect(() => {
+    console.log('page transition')
     return () => {
       saveScrollPosition(pathname);
     };
-  }, [pathname]);
+  }, [pathname, saveScrollPosition]);
 
   useEffect(() => {
     const scrollPosition = getScrollPosition(pathname);
@@ -21,7 +23,7 @@ const PageTransition = ({ children }: { children: React.ReactNode }) => {
         window.scrollTo(0, scrollPosition);
       }, 250);
     }
-  }, [pathname]);
+  }, [pathname, getScrollPosition]);
 
   return <>{children}</>;
 };
