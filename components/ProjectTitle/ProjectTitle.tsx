@@ -3,6 +3,8 @@ import { formatDate } from '@/utils/utils';
 import Box from '../shared/ui/Box/Box';
 import Text from '../shared/ui/Text/Text';
 import { useStore } from '@/store/store';
+import { useCallback } from 'react';
+import { usePathname } from 'next/navigation';
 
 interface Props {
   title: string | null;
@@ -10,7 +12,20 @@ interface Props {
 }
 const ProjectTitle = (props: Props) => {
   const { title, year } = props;
-  const { setGlobalShowMenu, globalShowMenu } = useStore((state) => state);
+  const { setGlobalShowMenu } = useStore((state) => state);
+  const pathname = usePathname();
+
+  const handleMouseEnter = useCallback(() => {
+    console.log('enter: ', pathname);
+    if (pathname === '/') return;
+    setGlobalShowMenu(true);
+  }, [pathname]);
+
+  const handleMouseLeave = useCallback(() => {
+    console.log('leave: ', pathname);
+    if (pathname === '/') return;
+    setGlobalShowMenu(false);
+  }, [pathname]);
 
   return (
     <Box
@@ -20,8 +35,8 @@ const ProjectTitle = (props: Props) => {
     >
       <Box
         className={'col-span-3'}
-        onMouseEnter={() => setGlobalShowMenu(true)}
-        onMouseLeave={() => setGlobalShowMenu(false)}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
         <Box className={'relative left-0 top-0 z-10 col-span-3'}>
           <Box className={'grid grid-cols-3 hover:text-hover'}>

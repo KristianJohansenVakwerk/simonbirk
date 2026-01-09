@@ -91,6 +91,8 @@ const ThreeDTest = (props: Props) => {
             <CustomImage
               asset={item?.asset}
               className="pointer-events-none h-full w-auto origin-center select-none object-contain object-center transition-all duration-300 ease-in-out will-change-transform"
+              vw={[100, 50, 50]}
+              priority={index <= 1 ? true : false}
             />
           </Box>
         );

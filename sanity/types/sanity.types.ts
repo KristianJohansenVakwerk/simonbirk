@@ -289,7 +289,7 @@ export type QuerySettingsResult = {
   }>;
 } | null;
 // Variable: queryProjects
-// Query: *[_type == 'project' ]{    _id,    _type,    title,    slug,    year,    "thumbnail": thumbnail.asset->{      ...    },  }
+// Query: *[_type == 'project' ] | order(year desc) {    _id,    _type,    title,    slug,    year,    "thumbnail": thumbnail.asset->{      ...    },    media[] {      _type,      asset->{        ...      }    }  }
 export type QueryProjectsResult = Array<{
   _id: string;
   _type: 'project';
@@ -318,6 +318,36 @@ export type QueryProjectsResult = Array<{
     metadata?: SanityImageMetadata;
     source?: SanityAssetSourceData;
   } | null;
+  media: Array<{
+    _type: 'image';
+    asset: {
+      _id: string;
+      _type: 'sanity.imageAsset';
+      _createdAt: string;
+      _updatedAt: string;
+      _rev: string;
+      originalFilename?: string;
+      label?: string;
+      title?: string;
+      description?: string;
+      altText?: string;
+      sha1hash?: string;
+      extension?: string;
+      mimeType?: string;
+      size?: number;
+      assetId?: string;
+      uploadId?: string;
+      path?: string;
+      url?: string;
+      metadata?: SanityImageMetadata;
+      source?: SanityAssetSourceData;
+    } | null;
+  }> | null;
+}>;
+// Variable: queryProjectSlugs
+// Query: *[_type == 'project' ] | order(year desc) {    slug  }
+export type QueryProjectSlugsResult = Array<{
+  slug: Slug | null;
 }>;
 // Variable: queryProjectBySlug
 // Query: *[_type == 'project' && slug.current == $slug][0]{    _id,    _type,    title,    media[] {      _type,      asset->{        ...      }    }  }
@@ -356,8 +386,9 @@ export type QueryProjectBySlugResult = {
 import '@sanity/client';
 declare module '@sanity/client' {
   interface SanityQueries {
-    "\n  *[_type == 'settings' ][0]": QuerySettingsResult;
-    '\n  *[_type == \'project\' ]{\n    _id,\n    _type,\n    title,\n    slug,\n    year,\n    "thumbnail": thumbnail.asset->{\n      ...\n    },\n  }\n': QueryProjectsResult;
-    "\n  *[_type == 'project' && slug.current == $slug][0]{\n    _id,\n    _type,\n    title,\n    media[] {\n      _type,\n      asset->{\n        ...\n      }\n    }\n  }\n": QueryProjectBySlugResult;
+    "*[_type == 'settings' ][0]": QuerySettingsResult;
+    '*[_type == \'project\' ] | order(year desc) {\n    _id,\n    _type,\n    title,\n    slug,\n    year,\n    "thumbnail": thumbnail.asset->{\n      ...\n    },\n    media[] {\n      _type,\n      asset->{\n        ...\n      }\n    }\n  }': QueryProjectsResult;
+    "*[_type == 'project' ] | order(year desc) {\n    slug\n  }": QueryProjectSlugsResult;
+    "*[_type == 'project' && slug.current == $slug][0]{\n    _id,\n    _type,\n    title,\n    media[] {\n      _type,\n      asset->{\n        ...\n      }\n    }\n  }": QueryProjectBySlugResult;
   }
 }

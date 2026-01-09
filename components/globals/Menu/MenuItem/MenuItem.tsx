@@ -1,9 +1,11 @@
+'use client';
 import CustomImage from '@/components/shared/ui/Image/Image';
 import Text from '@components/shared/ui/Text/Text';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { formatDate } from '@/utils/utils';
 import { useStore } from '@/store/store';
 import { useRouter, usePathname } from 'next/navigation';
+import { preloadProjectImages } from '@/utils/imagePreload';
 
 type Props = {
   item: any;
@@ -42,6 +44,8 @@ const MenuItem = (props: Props) => {
   }, []);
 
   const handleMouseEnter = useCallback(() => {
+    router.prefetch(item.slug?.current);
+    // preloadProjectImages(item);
     setGlobalThumbIndex(itemIndex);
     setGlobalHoverProject(true);
   }, [itemIndex]);
@@ -49,11 +53,7 @@ const MenuItem = (props: Props) => {
   const handleMouseLeave = useCallback(() => {
     setGlobalThumbIndex(-1);
     setGlobalHoverProject(false);
-
-    if (pathname.includes('/projects/') && globalShowMenu) {
-      setGlobalShowMenu(false);
-    }
-  }, [globalShowMenu]);
+  }, []);
 
   const handleClick = useCallback(
     async (slug: string | null) => {

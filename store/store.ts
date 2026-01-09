@@ -5,6 +5,8 @@ import { create } from 'zustand';
 interface StoreState {
   globalIntroDone: boolean;
   setGlobalIntroDone: (done: boolean) => void;
+  globalIntroPlayed: boolean;
+  setGlobalIntroPlayed: (done: boolean) => void;
   globalShowMenu: boolean;
   setGlobalShowMenu: (show: boolean) => void;
   globalActiveProjectIndex: number;
@@ -15,11 +17,16 @@ interface StoreState {
   setGlobalThumbIndex: (current: number) => void;
   globalHoverProject: boolean;
   setGlobalHoverProject: (state: boolean) => void;
+  scrollPositions: Record<string, number>;
+  saveScrollPosition: (path: string) => void;
+  getScrollPosition: (path: string) => number | undefined;
 }
 
-export const useStore = create<StoreState>((set) => ({
-  globalIntroDone: true,
+export const useStore = create<StoreState>((set, get) => ({
+  globalIntroDone: false,
   setGlobalIntroDone: (done: boolean) => set({ globalIntroDone: done }),
+  globalIntroPlayed: false,
+  setGlobalIntroPlayed: (done: boolean) => set({ globalIntroPlayed: done }),
   globalShowMenu: true,
   setGlobalShowMenu: (show: boolean) => set({ globalShowMenu: show }),
   globalStartThumbs: false,
@@ -31,4 +38,18 @@ export const useStore = create<StoreState>((set) => ({
   setGlobalThumbIndex: (current: number) => set({ globalThumbIndex: current }),
   globalHoverProject: false,
   setGlobalHoverProject: (state: boolean) => set({ globalHoverProject: state }),
+  scrollPositions: {},
+  saveScrollPosition: (path: string) => {
+    if (typeof window !== 'undefined') {
+      set((state) => ({
+        scrollPositions: {
+          ...state.scrollPositions,
+          [path]: window.scrollY,
+        },
+      }));
+    }
+  },
+  getScrollPosition: (path: string) => {
+    return get().scrollPositions[path];
+  },
 }));

@@ -1,36 +1,40 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { QueryProjectsResult } from '@/sanity/types/sanity.types';
-
+import { usePathname } from 'next/navigation';
+import { useStore } from '@/store/store';
 import MenuItem from './MenuItem/MenuItem';
-import { motion } from 'motion/react';
 
 type Props = {
   data: QueryProjectsResult | null;
-  handleMouseEnter: (index: number) => void;
-  handleMouseLeave: () => void;
-  handleClick: (url: string) => void;
-  activeIndex: number | null;
 };
-export const Menu = (props: Props) => {
-  const { data, handleMouseEnter, handleMouseLeave, handleClick, activeIndex } =
-    props;
+const Menu = (props: Props) => {
+  const { data } = props;
+  const pathname = usePathname();
+  const { globalShowMenu, setGlobalShowMenu } = useStore((state) => state);
+
+  const handleMouseLeave = useCallback(() => {
+    if (pathname.includes('/projects/') && globalShowMenu) {
+      setGlobalShowMenu(false);
+    }
+  }, [globalShowMenu, pathname]);
 
   return (
-    <>
-      <>
-        {data?.map((item, index) => (
-          <div key={`${item._id}`}>
-            <MenuItem
-              item={item}
-              itemIndex={index}
-            />
-          </div>
-        ))}
-        <div className="pointer-events-none h-[100vh]" />
-      </>
-    </>
+    <div
+      style={{ border: '1px solid red' }}
+      onMouseLeave={handleMouseLeave}
+    >
+      {data?.map((item, index) => (
+        <div key={`${item._id}`}>
+          <MenuItem
+            item={item}
+            itemIndex={index}
+          />
+        </div>
+      ))}
+      <div className="pointer-events-none h-[100vh]" />
+    </div>
   );
 };
 
-export default motion.create(Menu);
+export default Menu;

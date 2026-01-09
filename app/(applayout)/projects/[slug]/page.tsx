@@ -15,9 +15,11 @@ export const generateStaticParams = async () => {
     stega: false,
   });
 
-  return projects.map((project: { slug: { current: string } }) => ({
-    slug: project?.slug?.current,
-  }));
+  return projects
+    .filter((project) => project.slug?.current)
+    .map((project) => ({
+      slug: project.slug!.current,
+    }));
 };
 
 const ProjectRoute = async ({ params }: Props) => {

@@ -13,7 +13,7 @@ const Homepage = async () => {
 
   return (
     <>
-      {/* <Intro projects={randomProjects} /> */}
+      <Intro projects={randomProjects} />
       <Thumbnails data={projects} />
     </>
   );
