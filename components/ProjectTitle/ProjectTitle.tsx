@@ -16,13 +16,11 @@ const ProjectTitle = (props: Props) => {
   const pathname = usePathname();
 
   const handleMouseEnter = useCallback(() => {
-    console.log('enter: ', pathname);
     if (pathname === '/') return;
     setGlobalShowMenu(true);
   }, [pathname, setGlobalShowMenu]);
 
   const handleMouseLeave = useCallback(() => {
-    console.log('leave: ', pathname);
     if (pathname === '/') return;
     setGlobalShowMenu(false);
   }, [pathname, setGlobalShowMenu]);
@@ -38,16 +36,17 @@ const ProjectTitle = (props: Props) => {
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        <Box className={'relative left-0 top-0 z-10 col-span-3'}>
-          <Box className={'grid grid-cols-3 hover:text-hover'}>
-            <Box className={'col-span-2'}>
-              <Text>{title as string}</Text>
-            </Box>
-            <Box className={'col-span-1 flex items-end justify-end pr-1'}>
-              <Text>{formatDate(year as string)}</Text>
-            </Box>
+        <Box className={'row flex justify-between'}>
+          <Box className={'col-span-2'}>
+            <Text>{title as string}</Text>
+          </Box>
+          <Box className={'col-span-1 flex items-end justify-end pr-1'}>
+            <Text>{formatDate(year as string)}</Text>
           </Box>
         </Box>
+      </Box>
+      <Box className={'col-span-3'}>
+        <Text>[1/22]</Text>
       </Box>
     </Box>
   );

@@ -33,11 +33,13 @@ export const queryProjectBySlug = defineQuery(`
     _id,
     _type,
     title,
+    year,
     media[] {
       _type,
       asset->{
         ...
       }
-    }
+    },
+     "nextProjectSlug": *[_type == 'project' && slug.current != $slug && year < year] | order(year desc)[0].slug.current
   }
 `);

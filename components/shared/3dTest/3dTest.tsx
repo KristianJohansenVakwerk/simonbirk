@@ -13,6 +13,8 @@ const ThreeDTest = (props: Props) => {
   const { data } = props;
   const router = useRouter();
   const [activeIndex, setActiveIndex] = useState<number>(0);
+
+  const [cursor, setCursor] = useState<'n-resize' | 's-resize'>('n-resize');
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [scales, setScales] = useState<
@@ -32,8 +34,6 @@ const ThreeDTest = (props: Props) => {
   );
 
   useEffect(() => {
-    if (activeIndex <= 0) return;
-
     setScales((prev) => {
       return prev.map((e, index) => ({
         ...e,
@@ -44,13 +44,60 @@ const ThreeDTest = (props: Props) => {
     });
   }, [activeIndex]);
 
-  const handleClick = () => {
-    if (!data?.media) return;
+  useEffect(() => {
+    const handleMousemove = (event: MouseEvent) => {
+      const { y, whhalf } = getClientY(event);
 
+      if (y <= whhalf) {
+        setCursor('n-resize');
+      } else {
+        setCursor('s-resize');
+      }
+    };
+
+    const handleKeyUp = (event: KeyboardEvent) => {
+      const key = event.key;
+
+      switch (key) {
+        case 'ArrowUp':
+          setActiveIndex((prev) => ++prev);
+          break;
+
+        case 'ArrowDown':
+          setActiveIndex((prev) => {
+            if (prev === 0) return 0;
+            return --prev;
+          });
+          break;
+
+        default:
+          return;
+          break;
+      }
+    };
+
+    window.addEventListener('keyup', handleKeyUp);
+    window.addEventListener('mousemove', handleMousemove);
+
+    return () => {
+      window.removeEventListener('keyup', handleKeyUp);
+      window.removeEventListener('mousemove', handleMousemove);
+    };
+  }, []);
+
+  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (!data?.media) return;
+    const { y, whhalf } = getClientY(event);
+    console.log('data: ', data);
     if (activeIndex >= data.media.length - 1) {
       router.push('/');
     } else {
-      setActiveIndex(activeIndex + 1);
+      if (y <= whhalf) {
+        setActiveIndex((prev) => ++prev);
+      } else {
+        if (activeIndex === 0) return;
+        setActiveIndex((prev) => --prev);
+      }
     }
   };
 
@@ -63,7 +110,7 @@ const ThreeDTest = (props: Props) => {
       style={{
         perspective: '2000px', // Increased perspective for stronger effect
         perspectiveOrigin: 'center center',
-        cursor: 'pointer',
+        cursor: cursor,
       }}
       onClick={handleClick}
     >
@@ -102,3 +149,11 @@ const ThreeDTest = (props: Props) => {
 };
 
 export default ThreeDTest;
+
+const getClientY = (event: React.MouseEvent<HTMLDivElement> | MouseEvent) => {
+  const wh = window.innerHeight;
+  const whhalf = wh / 2;
+  const y = event.clientY;
+
+  return { y, whhalf };
+};
