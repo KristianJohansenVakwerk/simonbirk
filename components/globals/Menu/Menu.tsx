@@ -20,10 +20,7 @@ const Menu = (props: Props) => {
   }, [globalShowMenu, pathname]);
 
   return (
-    <div
-      style={{ border: '1px solid red' }}
-      onMouseLeave={handleMouseLeave}
-    >
+    <div onMouseLeave={handleMouseLeave}>
       {data?.map((item, index) => (
         <div key={`${item._id}`}>
           <MenuItem
