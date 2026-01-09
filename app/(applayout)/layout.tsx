@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
 
-import PageTransition from '@components/globals/PageTransition/PageTransition';
 import { HeaderServer } from '@/components/globals/Header/HeaderServer';
 import { draftMode } from 'next/headers';
 import { VisualEditing } from 'next-sanity';

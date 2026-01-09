@@ -19,13 +19,13 @@ const ProjectTitle = (props: Props) => {
     console.log('enter: ', pathname);
     if (pathname === '/') return;
     setGlobalShowMenu(true);
-  }, [pathname]);
+  }, [pathname, setGlobalShowMenu]);
 
   const handleMouseLeave = useCallback(() => {
     console.log('leave: ', pathname);
     if (pathname === '/') return;
     setGlobalShowMenu(false);
-  }, [pathname]);
+  }, [pathname, setGlobalShowMenu]);
 
   return (
     <Box
