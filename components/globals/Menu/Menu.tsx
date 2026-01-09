@@ -1,5 +1,5 @@
 'use client';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback } from 'react';
 import { QueryProjectsResult } from '@/sanity/types/sanity.types';
 import { usePathname } from 'next/navigation';
 import { useStore } from '@/store/store';
@@ -17,7 +17,7 @@ const Menu = (props: Props) => {
     if (pathname.includes('/projects/') && globalShowMenu) {
       setGlobalShowMenu(false);
     }
-  }, [globalShowMenu, pathname]);
+  }, [globalShowMenu, pathname, setGlobalShowMenu]);
 
   return (
     <div onMouseLeave={handleMouseLeave}>

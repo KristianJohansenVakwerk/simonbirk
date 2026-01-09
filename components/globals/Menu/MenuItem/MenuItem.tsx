@@ -4,8 +4,7 @@ import Text from '@components/shared/ui/Text/Text';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { formatDate } from '@/utils/utils';
 import { useStore } from '@/store/store';
-import { useRouter, usePathname } from 'next/navigation';
-import { preloadProjectImages } from '@/utils/imagePreload';
+import { useRouter } from 'next/navigation';
 
 type Props = {
   item: any;
@@ -20,18 +19,16 @@ const MenuItem = (props: Props) => {
   const heightRef = useRef<number | null>(null);
   const [height, setHeight] = useState(0);
   const router = useRouter();
-  const pathname = usePathname();
 
   const {
     setGlobalHoverProject,
     setGlobalThumbIndex,
     setGlobalShowMenu,
-    globalShowMenu,
     setGlobalActiveProjectIndex,
   } = useStore((state) => state);
 
-  let TOP_MARGIN = 75;
-  let SPACING = 16;
+  const TOP_MARGIN = 75;
+  const SPACING = 16;
 
   useEffect(() => {
     const scrollHeight = document.documentElement.scrollHeight;
@@ -48,7 +45,13 @@ const MenuItem = (props: Props) => {
     // preloadProjectImages(item);
     setGlobalThumbIndex(itemIndex);
     setGlobalHoverProject(true);
-  }, [itemIndex]);
+  }, [
+    itemIndex,
+    item.slug,
+    router,
+    setGlobalHoverProject,
+    setGlobalThumbIndex,
+  ]);
 
   const handleMouseLeave = useCallback(() => {
     setGlobalThumbIndex(-1);
@@ -64,7 +67,7 @@ const MenuItem = (props: Props) => {
         await router.push(`/projects/${slug}`);
       }
     },
-    [itemIndex],
+    [itemIndex, router, setGlobalActiveProjectIndex, setGlobalShowMenu],
   );
 
   return (

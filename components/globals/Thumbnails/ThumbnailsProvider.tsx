@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { checkIfBottom } from '@/utils/utils';
 import { useStore } from '@/store/store';
 interface Props {

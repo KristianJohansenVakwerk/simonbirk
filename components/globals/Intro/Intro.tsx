@@ -109,7 +109,7 @@ const Intro = (props: Props) => {
       // introEnd();
       setGlobalIntroDone(true);
     }
-  }, [introDone]);
+  }, [introDone, setGlobalIntroDone]);
 
   const currentDelayRef = useRef<number>(1000);
   const speedFactorRef = useRef<number>(0.8); // Slower acceleration for smoother feel
