@@ -16,6 +16,7 @@ const ThreeDTest = (props: Props) => {
 
   const [cursor, setCursor] = useState<'n-resize' | 's-resize'>('n-resize');
   const containerRef = useRef<HTMLDivElement>(null);
+  const initialRef = useRef<boolean>(true);
 
   const [scales, setScales] = useState<
     {
@@ -29,20 +30,49 @@ const ThreeDTest = (props: Props) => {
       show: index >= activeIndex && index < activeIndex + 2,
       scale: index === 0 ? 1 : 0.1 ** (index - activeIndex),
       z: (index - activeIndex) * -8000,
-      opacity: 0,
+      opacity: index === 0 ? 1 : 0,
     })) || [],
   );
 
   useEffect(() => {
+    if (initialRef.current) return;
+    console.log(activeIndex);
     setScales((prev) => {
       return prev.map((e, index) => ({
         ...e,
         show: index >= activeIndex && index < activeIndex + 2,
         scale: index === activeIndex ? 1 : 0.1 ** (index - activeIndex),
         z: (index - activeIndex) * -8000,
+        opacity:
+          index >= activeIndex &&
+          index < activeIndex + 2 &&
+          (index === activeIndex ? 1 : 0.1 ** (index - activeIndex)) > 0
+            ? 1
+            : 0,
       }));
     });
   }, [activeIndex]);
+
+  useEffect(() => {
+    // Trigger initial transition after mount
+    const timer = setTimeout(() => {
+      setScales((prev) => {
+        return prev.map((e, index) => ({
+          ...e,
+          opacity:
+            index >= activeIndex &&
+            index < activeIndex + 2 &&
+            (index === activeIndex ? 1 : 0.1 ** (index - activeIndex)) > 0
+              ? 1
+              : 0,
+        }));
+      });
+
+      initialRef.current = false;
+    }, 600);
+
+    return () => clearTimeout(timer);
+  }, []); // Run once on mount
 
   useEffect(() => {
     const handleMousemove = (event: MouseEvent) => {
@@ -129,7 +159,7 @@ const ThreeDTest = (props: Props) => {
               width: '100%',
               height: '100%',
               zIndex: data?.media ? data.media.length - index : 0,
-              opacity: scales[index].show && scales[index].scale > 0 ? 1 : 0,
+              opacity: scales[index]?.opacity ?? 0,
               transform: `translate(-50%, -50%) translate3d(0, 0, ${scales[index].z}px)`,
               transition: `all 0.3s ease-in-out`,
               willChange: 'transform',
@@ -139,7 +169,7 @@ const ThreeDTest = (props: Props) => {
               asset={item?.asset}
               className="pointer-events-none h-full w-auto origin-center select-none object-contain object-center transition-all duration-300 ease-in-out will-change-transform"
               vw={[100, 50, 50]}
-              priority={index <= 1 ? true : false}
+              priority={index <= 2 ? true : false}
             />
           </Box>
         );
