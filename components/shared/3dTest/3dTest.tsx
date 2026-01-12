@@ -92,9 +92,9 @@ const ThreeDTest = (props: Props) => {
   }, []); // Run once on mount
 
   useEffect(() => {
-    if (!combinedMedia.length) return;
-    setGlobalActiveProjectMediaLen(combinedMedia.length);
-  }, [combinedMedia.length]);
+    if (!data?.media?.length) return;
+    setGlobalActiveProjectMediaLen(data.media.length);
+  }, []);
 
   useEffect(() => {
     const handleMousemove = (event: MouseEvent) => {
@@ -163,8 +163,10 @@ const ThreeDTest = (props: Props) => {
 
     if (activeIndex >= currentMediaLength) {
       if (nextSlug) {
-        router.push(`/projects/${nextSlug}`);
-        setGlobalActiveProjectIndex(projectIndex + 1);
+        setTimeout(() => {
+          router.push(`/projects/${nextSlug}`);
+          setGlobalActiveProjectIndex(projectIndex + 1);
+        }, 300);
       } else {
         resetGlobalScrollPosition();
         router.push('/');
