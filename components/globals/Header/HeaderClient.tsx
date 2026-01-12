@@ -1,4 +1,5 @@
 'use client';
+import { useEffect } from 'react';
 import Link from 'next/link';
 import Text from '@components/shared/ui/Text/Text';
 import { useStore } from '@/store/store';
@@ -20,8 +21,18 @@ import NavController from '../NavController/NavController';
 const HeaderClient = (props: Props) => {
   const { projects, settings } = props;
 
-  const { globalIntroDone, resetGlobalScrollPosition, setGlobalShowMenu } =
-    useStore((state) => state);
+  const {
+    globalIntroDone,
+    resetGlobalScrollPosition,
+    setGlobalShowMenu,
+    setGlobalProjectOrder,
+  } = useStore((state) => state);
+
+  useEffect(() => {
+    if (projects) {
+      setGlobalProjectOrder(projects);
+    }
+  }, [projects, setGlobalProjectOrder]);
 
   const goHome = () => {
     setGlobalShowMenu(true);

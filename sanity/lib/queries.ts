@@ -34,12 +34,22 @@ export const queryProjectBySlug = defineQuery(`
     _type,
     title,
     year,
+    "slug": slug.current,
     media[] {
       _type,
       asset->{
         ...
       }
     },
-     "nextProjectSlug": *[_type == 'project' && slug.current != $slug && year < year] | order(year desc)[0].slug.current
+    "nextProject": *[_type == "project" && ^.year > year] | order(year desc)[0] {
+      title,
+      slug,
+       "media": media[0...1] {
+        _type,
+        asset->{
+          ...
+        }
+    }
+    } 
   }
 `);

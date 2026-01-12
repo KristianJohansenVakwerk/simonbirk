@@ -1,10 +1,11 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import Box from '@components/shared/ui/Box/Box';
 import { useRouter } from 'next/navigation';
 import { QueryProjectBySlugResult } from '@/sanity/types/sanity.types';
 import CustomImage from '@components/shared/ui/Image/Image';
+import { useStore } from '@/store/store';
 
 type Props = {
   data: QueryProjectBySlugResult;
@@ -13,10 +14,26 @@ const ThreeDTest = (props: Props) => {
   const { data } = props;
   const router = useRouter();
   const [activeIndex, setActiveIndex] = useState<number>(0);
+  const {
+    globalProjectOrder,
+    resetGlobalScrollPosition,
+    setGlobalActiveProjectIndex,
+    setGlobalActiveProjectMediaLen,
+    setGlobalActiveProjectCurrentIndex,
+  } = useStore((state) => state);
 
   const [cursor, setCursor] = useState<'n-resize' | 's-resize'>('n-resize');
   const containerRef = useRef<HTMLDivElement>(null);
   const initialRef = useRef<boolean>(true);
+
+  // Combine current media with next project's first image
+  const combinedMedia = useMemo(
+    () => [
+      ...(data?.media || []),
+      ...(data?.nextProject?.media?.[0] ? [data.nextProject.media[0]] : []),
+    ],
+    [data?.media, data?.nextProject?.media],
+  );
 
   const [scales, setScales] = useState<
     {
@@ -26,17 +43,16 @@ const ThreeDTest = (props: Props) => {
       opacity: number;
     }[]
   >(
-    data?.media?.map((item, index) => ({
+    combinedMedia.map((item, index) => ({
       show: index >= activeIndex && index < activeIndex + 2,
       scale: index === 0 ? 1 : 0.1 ** (index - activeIndex),
       z: (index - activeIndex) * -8000,
       opacity: index === 0 ? 1 : 0,
-    })) || [],
+    })),
   );
 
   useEffect(() => {
     if (initialRef.current) return;
-    console.log(activeIndex);
     setScales((prev) => {
       return prev.map((e, index) => ({
         ...e,
@@ -54,6 +70,7 @@ const ThreeDTest = (props: Props) => {
   }, [activeIndex]);
 
   useEffect(() => {
+    setGlobalActiveProjectCurrentIndex(1);
     // Trigger initial transition after mount
     const timer = setTimeout(() => {
       setScales((prev) => {
@@ -73,6 +90,11 @@ const ThreeDTest = (props: Props) => {
 
     return () => clearTimeout(timer);
   }, []); // Run once on mount
+
+  useEffect(() => {
+    if (!combinedMedia.length) return;
+    setGlobalActiveProjectMediaLen(combinedMedia.length);
+  }, [combinedMedia.length]);
 
   useEffect(() => {
     const handleMousemove = (event: MouseEvent) => {
@@ -116,20 +138,48 @@ const ThreeDTest = (props: Props) => {
   }, []);
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (!data?.media) return;
+    if (!combinedMedia.length) return;
     const { y, whhalf } = getClientY(event);
-    console.log('data: ', data);
-    if (activeIndex >= data.media.length - 1) {
-      router.push('/');
+
+    if (y <= whhalf) {
+      setActiveIndex((prev) => ++prev);
     } else {
-      if (y <= whhalf) {
-        setActiveIndex((prev) => ++prev);
-      } else {
-        if (activeIndex === 0) return;
-        setActiveIndex((prev) => --prev);
-      }
+      setActiveIndex((prev) => {
+        if (prev === 0) return 0;
+        return --prev;
+      });
     }
   };
+
+  useEffect(() => {
+    if (!combinedMedia.length || !data) return;
+
+    setGlobalActiveProjectCurrentIndex(activeIndex + 1);
+
+    const slugValue = typeof data?.slug === 'string' ? data.slug : '';
+    const projectIndex = slugValue ? globalProjectOrder.indexOf(slugValue) : -1;
+    const nextSlug = data.nextProject?.slug?.current;
+    const currentMediaLength = data?.media?.length || 0;
+
+    if (activeIndex >= currentMediaLength) {
+      if (nextSlug) {
+        router.push(`/projects/${nextSlug}`);
+        setGlobalActiveProjectIndex(projectIndex + 1);
+      } else {
+        resetGlobalScrollPosition();
+        router.push('/');
+      }
+    }
+  }, [
+    activeIndex,
+    combinedMedia.length,
+    data,
+    globalProjectOrder,
+    router,
+    setGlobalActiveProjectIndex,
+    setGlobalActiveProjectCurrentIndex,
+    resetGlobalScrollPosition,
+  ]);
 
   return (
     <Box
@@ -144,7 +194,7 @@ const ThreeDTest = (props: Props) => {
       }}
       onClick={handleClick}
     >
-      {data?.media?.map((item, index) => {
+      {combinedMedia.map((item, index) => {
         return (
           <Box
             key={index}
@@ -158,7 +208,7 @@ const ThreeDTest = (props: Props) => {
               left: '50%',
               width: '100%',
               height: '100%',
-              zIndex: data?.media ? data.media.length - index : 0,
+              zIndex: combinedMedia.length - index,
               opacity: scales[index]?.opacity ?? 0,
               transform: `translate(-50%, -50%) translate3d(0, 0, ${scales[index].z}px)`,
               transition: `all 0.3s ease-in-out`,
@@ -182,7 +232,7 @@ export default ThreeDTest;
 
 const getClientY = (event: React.MouseEvent<HTMLDivElement> | MouseEvent) => {
   const wh = window.innerHeight;
-  const whhalf = wh / 2;
+  const whhalf = (wh / 3) * 2;
   const y = event.clientY;
 
   return { y, whhalf };

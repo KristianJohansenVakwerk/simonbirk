@@ -14,7 +14,12 @@ interface Props {
 }
 const ProjectTitle = (props: Props) => {
   const { title, year } = props;
-  const { globalShowMenu, setGlobalShowMenu } = useStore((state) => state);
+  const {
+    globalShowMenu,
+    setGlobalShowMenu,
+    globalActiveProjectMediaLen,
+    globalActiveProjectCurrentIndex,
+  } = useStore((state) => state);
   const pathname = usePathname();
 
   const handleMouseEnter = useCallback(() => {
@@ -51,7 +56,9 @@ const ProjectTitle = (props: Props) => {
         </Box>
       </Box>
       <Box className={'col-span-3'}>
-        <Text>[1/22]</Text>
+        <Text>
+          [{globalActiveProjectCurrentIndex}/{globalActiveProjectMediaLen}]
+        </Text>
       </Box>
     </MotionBox>
   );

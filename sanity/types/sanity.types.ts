@@ -289,7 +289,7 @@ export type QuerySettingsResult = {
   }>;
 } | null;
 // Variable: queryProjects
-// Query: *[_type == 'project' ] | order(year desc) {    _id,    _type,    title,    slug,    year,    "thumbnail": thumbnail.asset->{      ...    },    media[] {      _type,      asset->{        ...      }    }  }
+// Query: *[_type == 'project' ] | order(year desc) {    _id,    _type,    title,    slug,    year,    "thumbnail": thumbnail.asset->{      ...    },    "media": media[0...2] {      _type,      asset->{        ...      }    }  }
 export type QueryProjectsResult = Array<{
   _id: string;
   _type: 'project';
@@ -350,11 +350,13 @@ export type QueryProjectSlugsResult = Array<{
   slug: Slug | null;
 }>;
 // Variable: queryProjectBySlug
-// Query: *[_type == 'project' && slug.current == $slug][0]{    _id,    _type,    title,    media[] {      _type,      asset->{        ...      }    }  }
+// Query: *[_type == 'project' && slug.current == $slug][0]{    _id,    _type,    title,    year,    "slug": slug.current,    media[] {      _type,      asset->{        ...      }    },    "nextProject": *[_type == "project" && ^.year > year] | order(year desc)[0] {      title,      slug,       "media": media[0...1] {        _type,        asset->{          ...        }    }    }   }
 export type QueryProjectBySlugResult = {
   _id: string;
   _type: 'project';
   title: string | null;
+  year: string | null;
+  slug: string | null;
   media: Array<{
     _type: 'image';
     asset: {
@@ -380,15 +382,44 @@ export type QueryProjectBySlugResult = {
       source?: SanityAssetSourceData;
     } | null;
   }> | null;
+  nextProject: {
+    title: string | null;
+    slug: Slug | null;
+    media: Array<{
+      _type: 'image';
+      asset: {
+        _id: string;
+        _type: 'sanity.imageAsset';
+        _createdAt: string;
+        _updatedAt: string;
+        _rev: string;
+        originalFilename?: string;
+        label?: string;
+        title?: string;
+        description?: string;
+        altText?: string;
+        sha1hash?: string;
+        extension?: string;
+        mimeType?: string;
+        size?: number;
+        assetId?: string;
+        uploadId?: string;
+        path?: string;
+        url?: string;
+        metadata?: SanityImageMetadata;
+        source?: SanityAssetSourceData;
+      } | null;
+    }> | null;
+  } | null;
 } | null;
 
 // Query TypeMap
 import '@sanity/client';
 declare module '@sanity/client' {
   interface SanityQueries {
-    "*[_type == 'settings' ][0]": QuerySettingsResult;
-    '*[_type == \'project\' ] | order(year desc) {\n    _id,\n    _type,\n    title,\n    slug,\n    year,\n    "thumbnail": thumbnail.asset->{\n      ...\n    },\n    media[] {\n      _type,\n      asset->{\n        ...\n      }\n    }\n  }': QueryProjectsResult;
-    "*[_type == 'project' ] | order(year desc) {\n    slug\n  }": QueryProjectSlugsResult;
-    "*[_type == 'project' && slug.current == $slug][0]{\n    _id,\n    _type,\n    title,\n    media[] {\n      _type,\n      asset->{\n        ...\n      }\n    }\n  }": QueryProjectBySlugResult;
+    " *[_type == 'settings' ][0]": QuerySettingsResult;
+    '\n  *[_type == \'project\' ] | order(year desc) {\n    _id,\n    _type,\n    title,\n    slug,\n    year,\n    "thumbnail": thumbnail.asset->{\n      ...\n    },\n    "media": media[0...2] {\n      _type,\n      asset->{\n        ...\n      }\n    }\n  }\n': QueryProjectsResult;
+    "\n  *[_type == 'project' ] | order(year desc) {\n    slug\n  }\n": QueryProjectSlugsResult;
+    '\n  *[_type == \'project\' && slug.current == $slug][0]{\n    _id,\n    _type,\n    title,\n    year,\n    "slug": slug.current,\n    media[] {\n      _type,\n      asset->{\n        ...\n      }\n    },\n    "nextProject": *[_type == "project" && ^.year > year] | order(year desc)[0] {\n      title,\n      slug,\n       "media": media[0...1] {\n        _type,\n        asset->{\n          ...\n        }\n    }\n    } \n  }\n': QueryProjectBySlugResult;
   }
 }
