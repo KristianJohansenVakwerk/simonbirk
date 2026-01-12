@@ -24,6 +24,7 @@ export default async function RootLayout({
   return (
     <>
       <StoreInitializer />
+
       <HeaderServer />
 
       {isDraftMode && (

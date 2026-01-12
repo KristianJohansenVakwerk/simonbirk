@@ -5,6 +5,8 @@ import Text from '../shared/ui/Text/Text';
 import { useStore } from '@/store/store';
 import { useCallback } from 'react';
 import { usePathname } from 'next/navigation';
+import { motion } from 'motion/react';
+import { menuVariants } from '@/utils/animationUtils';
 
 interface Props {
   title: string | null;
@@ -12,7 +14,7 @@ interface Props {
 }
 const ProjectTitle = (props: Props) => {
   const { title, year } = props;
-  const { setGlobalShowMenu } = useStore((state) => state);
+  const { globalShowMenu, setGlobalShowMenu } = useStore((state) => state);
   const pathname = usePathname();
 
   const handleMouseEnter = useCallback(() => {
@@ -26,10 +28,13 @@ const ProjectTitle = (props: Props) => {
   }, [pathname, setGlobalShowMenu]);
 
   return (
-    <Box
+    <MotionBox
       className={
         'relative mb-2 grid cursor-pointer grid-cols-6 justify-between transition-colors duration-300 last:mb-0'
       }
+      initial={menuVariants.hide}
+      animate={!globalShowMenu ? menuVariants.show : menuVariants.hide}
+      exit={menuVariants.hide}
     >
       <Box
         className={'col-span-3'}
@@ -48,8 +53,10 @@ const ProjectTitle = (props: Props) => {
       <Box className={'col-span-3'}>
         <Text>[1/22]</Text>
       </Box>
-    </Box>
+    </MotionBox>
   );
 };
 
 export default ProjectTitle;
+
+const MotionBox = motion.create(Box);

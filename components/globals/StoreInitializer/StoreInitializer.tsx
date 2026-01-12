@@ -10,7 +10,6 @@ const StoreInitializer = () => {
   );
 
   useLayoutEffect(() => {
-    console.log('layout effect:', pathname);
     setGlobalShowMenu(pathname === '/');
 
     if (globalIntroDone) return;

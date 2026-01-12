@@ -4,23 +4,33 @@ import { QueryProjectsResult } from '@/sanity/types/sanity.types';
 import { usePathname } from 'next/navigation';
 import { useStore } from '@/store/store';
 import MenuItem from './MenuItem/MenuItem';
+import { motion } from 'motion/react';
+import { menuVariants } from '@/utils/animationUtils';
 
 type Props = {
   data: QueryProjectsResult | null;
 };
+
 const Menu = (props: Props) => {
   const { data } = props;
   const pathname = usePathname();
-  const { globalShowMenu, setGlobalShowMenu } = useStore((state) => state);
+  const { globalShowMenu, setGlobalShowMenu, setGlobalScrollPosition } =
+    useStore((state) => state);
 
   const handleMouseLeave = useCallback(() => {
+    setGlobalScrollPosition();
     if (pathname.includes('/projects/') && globalShowMenu) {
       setGlobalShowMenu(false);
     }
   }, [globalShowMenu, pathname, setGlobalShowMenu]);
 
   return (
-    <div onMouseLeave={handleMouseLeave}>
+    <motion.div
+      onMouseLeave={handleMouseLeave}
+      initial={menuVariants.hide}
+      exit={menuVariants.hide}
+      animate={globalShowMenu ? menuVariants.show : menuVariants.hide}
+    >
       {data?.map((item, index) => (
         <div key={`${item._id}`}>
           <MenuItem
@@ -30,7 +40,7 @@ const Menu = (props: Props) => {
         </div>
       ))}
       <div className="pointer-events-none h-[100vh]" />
-    </div>
+    </motion.div>
   );
 };
 

@@ -17,9 +17,9 @@ interface StoreState {
   setGlobalThumbIndex: (current: number) => void;
   globalHoverProject: boolean;
   setGlobalHoverProject: (state: boolean) => void;
-  scrollPositions: Record<string, number>;
-  saveScrollPosition: (path: string) => void;
-  getScrollPosition: (path: string) => number | undefined;
+  globalScrollPosition: number;
+  setGlobalScrollPosition: () => void;
+  resetGlobalScrollPosition: () => void;
 }
 
 export const useStore = create<StoreState>((set, get) => ({
@@ -38,18 +38,13 @@ export const useStore = create<StoreState>((set, get) => ({
   setGlobalThumbIndex: (current: number) => set({ globalThumbIndex: current }),
   globalHoverProject: false,
   setGlobalHoverProject: (state: boolean) => set({ globalHoverProject: state }),
-  scrollPositions: {},
-  saveScrollPosition: (path: string) => {
+  globalScrollPosition: 0,
+  setGlobalScrollPosition: () => {
     if (typeof window !== 'undefined') {
-      set((state) => ({
-        scrollPositions: {
-          ...state.scrollPositions,
-          [path]: window.scrollY,
-        },
-      }));
+      set({ globalScrollPosition: window.scrollY });
     }
   },
-  getScrollPosition: (path: string) => {
-    return get().scrollPositions[path];
+  resetGlobalScrollPosition: () => {
+    set({ globalScrollPosition: 0 });
   },
 }));

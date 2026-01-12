@@ -74,6 +74,10 @@ interface ThumbProps {
 const Thumb = (props: ThumbProps) => {
   const { item, activeIndex, index } = props;
 
+  const image = item?.media ? item.media[0].asset : item?.thumbnail;
+
+  if (!image) return <>No image</>;
+
   return (
     <motion.div
       variants={variants}
@@ -83,7 +87,7 @@ const Thumb = (props: ThumbProps) => {
       className={clsx('absolute right-0 top-0 h-full w-auto')}
     >
       <CustomImage
-        asset={item?.thumbnail}
+        asset={image}
         className={clsx('h-full w-auto')}
       />
     </motion.div>

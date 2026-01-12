@@ -25,6 +25,7 @@ const MenuItem = (props: Props) => {
     setGlobalThumbIndex,
     setGlobalShowMenu,
     setGlobalActiveProjectIndex,
+    setGlobalScrollPosition,
   } = useStore((state) => state);
 
   const TOP_MARGIN = 75;
@@ -60,10 +61,11 @@ const MenuItem = (props: Props) => {
 
   const handleClick = useCallback(
     async (slug: string | null) => {
-      setGlobalActiveProjectIndex(itemIndex);
+      await setGlobalActiveProjectIndex(itemIndex);
       await setGlobalShowMenu(false);
 
       if (slug) {
+        await setGlobalScrollPosition();
         await router.push(`/projects/${slug}`);
       }
     },
