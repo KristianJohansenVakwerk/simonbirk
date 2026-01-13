@@ -1,5 +1,5 @@
 import './globals.css';
-
+import Favicon from '@/components/globals/Favicon/Favicon';
 import { HeaderServer } from '@/components/globals/Header/HeaderServer';
 import { draftMode } from 'next/headers';
 import { VisualEditing } from 'next-sanity';
@@ -33,6 +33,9 @@ export default async function RootLayout({
 
   return (
     <>
+      <head>
+        <Favicon />
+      </head>
       <StoreInitializer />
 
       <HeaderServer />

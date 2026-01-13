@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { formatDate } from '@/utils/utils';
 import { useStore } from '@/store/store';
 import { useRouter } from 'next/navigation';
+import { preloadProjectImages } from '@/utils/imagePreload';
 
 type Props = {
   item: any;

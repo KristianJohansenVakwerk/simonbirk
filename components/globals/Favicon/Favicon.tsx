@@ -73,19 +73,6 @@ export default function Favicon() {
       }
     };
 
-    // Only cycle favicons on project pages
-    if (!pathname?.startsWith('/projects/')) {
-      // On non-project pages, use default favicon
-      updateFavicon('/favicon-32x32.png');
-
-      // Clear any existing interval
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-      return;
-    }
-
     const cycleFavicons = () => {
       if (typeof document === 'undefined' || !document.head) {
         return;
