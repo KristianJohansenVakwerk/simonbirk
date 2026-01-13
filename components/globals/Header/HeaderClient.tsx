@@ -51,12 +51,14 @@ const HeaderClient = (props: Props) => {
     >
       <Link
         href={'/'}
-        className={'sticky top-75 col-span-2 flex h-fit flex-row pl-1'}
+        className={
+          'col-span-20 sticky top-[32px] hidden h-fit flex-row pl-1 lg:top-75 lg:col-span-2 lg:flex'
+        }
         onClick={goHome}
       >
         <Text>Simon Birk</Text>
       </Link>
-      <div className="col-span-6 mt-75">
+      <div className="col-span-20 lg:col-span-6 lg:mt-75">
         <NavController projects={projects} />
       </div>
 

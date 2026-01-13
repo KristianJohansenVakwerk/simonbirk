@@ -5,7 +5,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { formatDate } from '@/utils/utils';
 import { useStore } from '@/store/store';
 import { useRouter } from 'next/navigation';
-// import { preloadProjectImages } from '@/utils/imagePreload';
+import { useDeviceDetection } from '@/utils/useDeviceDetection';
 
 type Props = {
   item: any;
@@ -29,7 +29,9 @@ const MenuItem = (props: Props) => {
     setGlobalScrollPosition,
   } = useStore((state) => state);
 
-  const TOP_MARGIN = 75;
+  const deviceInfo = useDeviceDetection();
+
+  const TOP_MARGIN = deviceInfo.isMobile ? 32 : 75;
   const SPACING = 16;
 
   useEffect(() => {
@@ -44,7 +46,6 @@ const MenuItem = (props: Props) => {
 
   const handleMouseEnter = useCallback(() => {
     router.prefetch(`/projects/${item.slug?.current}`);
-    // preloadProjectImages(item);
     setGlobalThumbIndex(itemIndex);
     setGlobalHoverProject(true);
   }, [
@@ -76,11 +77,11 @@ const MenuItem = (props: Props) => {
   return (
     <div
       ref={parentRef}
-      className="relative flex flex-row flex-wrap pb-1"
+      className="relative flex flex-wrap gap-1 pb-2 lg:flex-row lg:pb-1"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <div className="pointer-events-none absolute top-0 z-10 w-[calc(50%-16px)]">
+      <div className="pointer-events-none absolute bottom-[16px] top-auto z-10 w-full lg:absolute lg:bottom-auto lg:top-0 lg:w-[calc(50%-16px)]">
         <div
           className="pointer-events-none"
           ref={stickyElRef}
@@ -98,7 +99,7 @@ const MenuItem = (props: Props) => {
       </div>
 
       <div
-        className="ml-auto w-[50%] cursor-pointer"
+        className="ml-auto w-full cursor-pointer lg:w-1/2"
         onClick={() => handleClick(item.slug?.current)}
       >
         <CustomImage

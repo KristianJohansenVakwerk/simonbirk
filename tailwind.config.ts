@@ -37,6 +37,9 @@ module.exports = {
         '20': 'repeat(20, minmax(0, 1fr))',
         '21': 'repeat(21, minmax(0, 1fr))',
       },
+      gridColumn: {
+        'span-20': 'span 20 / span 20',
+      },
       spacing: {
         '1': '16px',
         '2': '32px',

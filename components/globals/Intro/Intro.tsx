@@ -136,7 +136,7 @@ const Intro = (props: Props) => {
           >
             <CustomImage
               asset={item?.thumbnail}
-              className={'absolute right-0 top-0 h-full w-auto'}
+              className={'absolute right-0 top-0 h-full w-auto object-contain'}
               priority={true}
               loadDone={handleLoadDone}
             />
