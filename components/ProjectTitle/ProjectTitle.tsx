@@ -15,7 +15,6 @@ interface Props {
 const ProjectTitle = (props: Props) => {
   const { title, year } = props;
   const {
-    globalShowMenu,
     setGlobalShowMenu,
     globalActiveProjectMediaLen,
     globalActiveProjectCurrentIndex,
