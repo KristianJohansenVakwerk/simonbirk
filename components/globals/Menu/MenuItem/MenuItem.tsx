@@ -42,7 +42,7 @@ const MenuItem = (props: Props) => {
   }, []);
 
   const handleMouseEnter = useCallback(() => {
-    router.prefetch(item.slug?.current);
+    router.prefetch(`/projects/${item.slug?.current}`);
     // preloadProjectImages(item);
     setGlobalThumbIndex(itemIndex);
     setGlobalHoverProject(true);
