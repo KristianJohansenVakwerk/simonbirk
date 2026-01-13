@@ -27,11 +27,6 @@ export const settingsType = defineType({
           type: 'string',
         }),
         defineField({
-          name: 'seoKeywords',
-          title: 'Keywords',
-          type: 'string',
-        }),
-        defineField({
           name: 'seoImage',
           title: 'Image',
           type: 'image',

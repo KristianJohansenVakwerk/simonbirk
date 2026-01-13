@@ -35,6 +35,12 @@ export const queryProjectBySlug = defineQuery(`
     title,
     year,
     "slug": slug.current,
+    thumbnail {
+      _type,
+      asset->{
+        ...
+      }
+    },
     media[] {
       _type,
       asset->{
