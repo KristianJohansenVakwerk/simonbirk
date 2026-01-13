@@ -5,7 +5,7 @@ import Text from '../shared/ui/Text/Text';
 import { useStore } from '@/store/store';
 import { useCallback } from 'react';
 import { usePathname } from 'next/navigation';
-import { motion } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
 import { menuVariants } from '@/utils/animationUtils';
 
 interface Props {
@@ -32,35 +32,41 @@ const ProjectTitle = (props: Props) => {
     setGlobalShowMenu(false);
   }, [pathname, setGlobalShowMenu]);
 
+  const computedTitle = title ? title : '';
+  const computedYear = year ? year : '';
+
   return (
-    <MotionBox
-      className={
-        'relative mb-2 grid cursor-pointer grid-cols-6 justify-between transition-colors duration-300 last:mb-0'
-      }
-      initial={menuVariants.hide}
-      animate={!globalShowMenu ? menuVariants.show : menuVariants.hide}
-      exit={menuVariants.hide}
-    >
-      <Box
-        className={'col-span-3'}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+    <AnimatePresence mode="wait">
+      <MotionBox
+        className={
+          'relative mb-2 grid cursor-pointer grid-cols-6 justify-between transition-colors duration-300 last:mb-0'
+        }
+        key={computedTitle + computedYear}
+        initial={menuVariants.hide}
+        animate={menuVariants.show}
+        exit={menuVariants.hide}
       >
-        <Box className={'row flex justify-between'}>
-          <Box className={'col-span-2'}>
-            <Text>{title as string}</Text>
-          </Box>
-          <Box className={'col-span-1 flex items-end justify-end pr-1'}>
-            <Text>{formatDate(year as string)}</Text>
+        <Box
+          className={'col-span-3'}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          <Box className={'row flex justify-between'}>
+            <Box className={'col-span-2'}>
+              <Text>{title as string}</Text>
+            </Box>
+            <Box className={'col-span-1 flex items-end justify-end pr-1'}>
+              <Text>{formatDate(year as string)}</Text>
+            </Box>
           </Box>
         </Box>
-      </Box>
-      <Box className={'col-span-3'}>
-        <Text>
-          [{globalActiveProjectCurrentIndex}/{globalActiveProjectMediaLen}]
-        </Text>
-      </Box>
-    </MotionBox>
+        <Box className={'col-span-3'}>
+          <Text>
+            [{globalActiveProjectCurrentIndex}/{globalActiveProjectMediaLen}]
+          </Text>
+        </Box>
+      </MotionBox>
+    </AnimatePresence>
   );
 };
 
