@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "fetch-favicons": "node scripts/fetch-favicons.js"
   },
   "dependencies": {
     "@capsizecss/core": "^4.1.2",
