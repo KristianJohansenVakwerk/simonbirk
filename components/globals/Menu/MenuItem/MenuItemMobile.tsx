@@ -4,8 +4,6 @@ import Text from '@components/shared/ui/Text/Text';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { formatDate } from '@/utils/utils';
 import { useStore } from '@/store/store';
-import { useRouter } from 'next/navigation';
-import { useDeviceDetection } from '@/utils/useDeviceDetection';
 import Link from 'next/link';
 import clsx from 'clsx';
 
@@ -22,15 +20,11 @@ const MenuItemMobile = (props: Props) => {
   const [isFixed, setIsFixed] = useState(false);
   const [spacerHeight, setSpacerHeight] = useState(0);
 
-  const router = useRouter();
-
   const {
     setGlobalShowMenu,
     setGlobalActiveProjectIndex,
     setGlobalScrollPosition,
   } = useStore((state) => state);
-
-  const deviceInfo = useDeviceDetection();
 
   const TOP_MARGIN = 24;
   const SPACING = 16;

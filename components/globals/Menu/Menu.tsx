@@ -8,6 +8,7 @@ import { motion } from 'motion/react';
 import { menuVariants } from '@/utils/animationUtils';
 import React from 'react';
 import MenuItemMobile from './MenuItem/MenuItemMobile';
+import { useDeviceDetection } from '@/utils/useDeviceDetection';
 
 type Props = {
   data: QueryProjectsResult | null;
@@ -18,6 +19,8 @@ const Menu = (props: Props) => {
   const pathname = usePathname();
   const { globalShowMenu, setGlobalShowMenu, setGlobalScrollPosition } =
     useStore((state) => state);
+
+  const deviceInfo = useDeviceDetection();
 
   const handleMouseLeave = useCallback(() => {
     setGlobalScrollPosition();
@@ -35,19 +38,21 @@ const Menu = (props: Props) => {
     >
       {data?.map((item, index) => (
         <React.Fragment key={`${item._id}`}>
-          <div className="hidden lg:block">
+          {deviceInfo.isDesktop && (
             <MenuItem
               item={item}
               itemIndex={index}
             />
-          </div>
+          )}
 
-          <div className="mt-2 block lg:hidden">
-            <MenuItemMobile
-              item={item}
-              itemIndex={index}
-            />
-          </div>
+          {deviceInfo.isMobile && (
+            <div className="mt-2 block">
+              <MenuItemMobile
+                item={item}
+                itemIndex={index}
+              />
+            </div>
+          )}
         </React.Fragment>
       ))}
       <div className="pointer-events-none h-[100vh]" />
