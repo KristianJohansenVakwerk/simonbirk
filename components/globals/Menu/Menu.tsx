@@ -6,6 +6,8 @@ import { useStore } from '@/store/store';
 import MenuItem from './MenuItem/MenuItem';
 import { motion } from 'motion/react';
 import { menuVariants } from '@/utils/animationUtils';
+import React from 'react';
+import MenuItemMobile from './MenuItem/MenuItemMobile';
 
 type Props = {
   data: QueryProjectsResult | null;
@@ -32,12 +34,21 @@ const Menu = (props: Props) => {
       animate={globalShowMenu ? menuVariants.show : menuVariants.hide}
     >
       {data?.map((item, index) => (
-        <div key={`${item._id}`}>
-          <MenuItem
-            item={item}
-            itemIndex={index}
-          />
-        </div>
+        <React.Fragment key={`${item._id}`}>
+          <div className="hidden lg:block">
+            <MenuItem
+              item={item}
+              itemIndex={index}
+            />
+          </div>
+
+          <div className="mt-2 block lg:hidden">
+            <MenuItemMobile
+              item={item}
+              itemIndex={index}
+            />
+          </div>
+        </React.Fragment>
       ))}
       <div className="pointer-events-none h-[100vh]" />
     </motion.div>

@@ -81,7 +81,7 @@ const MenuItem = (props: Props) => {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <div className="pointer-events-none absolute bottom-[16px] top-auto z-10 w-full lg:absolute lg:bottom-auto lg:top-0 lg:w-[calc(50%-16px)]">
+      <div className="pointer-events-none absolute top-0 z-10 w-full lg:w-[calc(50%-16px)]">
         <div
           className="pointer-events-none"
           ref={stickyElRef}
@@ -89,7 +89,9 @@ const MenuItem = (props: Props) => {
         >
           <div
             className="pointer-events-auto sticky flex w-full cursor-pointer justify-between"
-            style={{ top: TOP_MARGIN + itemIndex * SPACING }}
+            style={{
+              top: TOP_MARGIN + itemIndex * SPACING,
+            }}
             onClick={() => handleClick(item.slug?.current)}
           >
             <Text className={'sticky top-0'}>{item.title}</Text>
@@ -99,7 +101,7 @@ const MenuItem = (props: Props) => {
       </div>
 
       <div
-        className="ml-auto w-full cursor-pointer lg:w-1/2"
+        className="relative ml-auto w-full cursor-pointer lg:w-1/2"
         onClick={() => handleClick(item.slug?.current)}
       >
         <CustomImage

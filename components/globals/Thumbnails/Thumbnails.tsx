@@ -88,7 +88,9 @@ const Thumb = (props: ThumbProps) => {
     >
       <CustomImage
         asset={image}
-        className={clsx('h-full w-auto object-contain')}
+        className={clsx(
+          'lg:object-center-center h-full w-auto object-contain object-left-bottom',
+        )}
       />
     </motion.div>
   );
