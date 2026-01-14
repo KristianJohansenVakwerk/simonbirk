@@ -92,26 +92,26 @@ const MenuItemMobile = (props: Props) => {
     };
   }, [topOffset, isFixed]);
 
-  const handleClick = useCallback(
-    async (slug: string | null) => {
-      await setGlobalActiveProjectIndex(itemIndex);
-      await setGlobalShowMenu(false);
+  // const handleClick = useCallback(
+  //   async (slug: string | null) => {
+  //     await setGlobalActiveProjectIndex(itemIndex);
+  //     await setGlobalShowMenu(false);
 
-      if (slug) {
-        await setGlobalScrollPosition();
-      }
-    },
-    [
-      itemIndex,
-      setGlobalActiveProjectIndex,
-      setGlobalShowMenu,
-      setGlobalScrollPosition,
-    ],
-  );
+  //     if (slug) {
+  //       await setGlobalScrollPosition();
+  //     }
+  //   },
+  //   [
+  //     itemIndex,
+  //     setGlobalActiveProjectIndex,
+  //     setGlobalShowMenu,
+  //     setGlobalScrollPosition,
+  //   ],
+  // );
 
   return (
     <Link
-      href={item.slug?.current}
+      href={`/projects/${item.slug?.current}`}
       className="relative flex flex-wrap gap-[8px]"
     >
       <div className="ml-auto w-full cursor-pointer">
@@ -143,10 +143,6 @@ const MenuItemMobile = (props: Props) => {
             transition: 'top 0.2s ease-out',
             willChange: 'transform',
           }),
-        }}
-        onClick={(e) => {
-          e.preventDefault();
-          handleClick(item.slug?.current);
         }}
       >
         <Text>{item.title}</Text>
