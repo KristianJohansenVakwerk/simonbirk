@@ -3,7 +3,7 @@ import CustomImage from '@/components/shared/ui/Image/Image';
 import Text from '@components/shared/ui/Text/Text';
 import { useEffect, useRef, useState } from 'react';
 import { formatDate } from '@/utils/utils';
-import { useStore } from '@/store/store';
+// import { useStore } from '@/store/store';
 import Link from 'next/link';
 import clsx from 'clsx';
 
