@@ -38,15 +38,16 @@ const ProjectTitle = (props: Props) => {
     <AnimatePresence mode="wait">
       <MotionBox
         className={
-          'relative mb-2 grid cursor-pointer grid-cols-6 justify-between transition-colors duration-300 last:mb-0'
+          'relative mb-2 mt-2 flex cursor-pointer flex-row justify-between px-1 last:mb-0 lg:mt-0 lg:grid lg:grid-cols-6 lg:px-0'
         }
         key={computedTitle + computedYear}
         initial={menuVariants.hide}
         animate={menuVariants.show}
         exit={menuVariants.hide}
+        style={{ border: '1px solid blue' }}
       >
         <Box
-          className={'col-span-3'}
+          className={'col-span-6 lg:col-span-3'}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
@@ -59,7 +60,7 @@ const ProjectTitle = (props: Props) => {
             </Box>
           </Box>
         </Box>
-        <Box className={'col-span-3'}>
+        <Box className={'col-span-6 lg:col-span-3'}>
           <Text>
             [{globalActiveProjectCurrentIndex}/{globalActiveProjectMediaLen}]
           </Text>

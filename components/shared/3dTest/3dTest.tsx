@@ -187,12 +187,13 @@ const ThreeDTest = (props: Props) => {
     <Box
       ref={containerRef}
       className={
-        'fixed left-0 top-0 flex h-[100vh] w-[100vw] flex-col overflow-hidden'
+        'fixed left-0 top-0 flex h-[100svh] w-[100vw] flex-col overflow-hidden lg:h-[100vh]'
       }
       style={{
         perspective: '2000px', // Increased perspective for stronger effect
         perspectiveOrigin: 'center center',
         cursor: cursor,
+        border: '1px solid red',
       }}
       onClick={handleClick}
     >

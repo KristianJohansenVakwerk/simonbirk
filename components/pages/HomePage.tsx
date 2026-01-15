@@ -14,7 +14,7 @@ const Homepage = async () => {
   return (
     <>
       <Intro projects={randomProjects} />
-      <Thumbnails data={projects} />
+      {/* <Thumbnails data={projects} /> */}
     </>
   );
 };

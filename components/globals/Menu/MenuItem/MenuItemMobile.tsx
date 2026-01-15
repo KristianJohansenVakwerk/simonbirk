@@ -1,7 +1,7 @@
 'use client';
 import CustomImage from '@/components/shared/ui/Image/Image';
 import Text from '@components/shared/ui/Text/Text';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { formatDate } from '@/utils/utils';
 import { useStore } from '@/store/store';
 import Link from 'next/link';
@@ -20,14 +20,14 @@ const MenuItemMobile = (props: Props) => {
   const [isFixed, setIsFixed] = useState(false);
   const [spacerHeight, setSpacerHeight] = useState(0);
 
-  const {
-    setGlobalShowMenu,
-    setGlobalActiveProjectIndex,
-    setGlobalScrollPosition,
-  } = useStore((state) => state);
+  // const {
+  //   setGlobalShowMenu,
+  //   setGlobalActiveProjectIndex,
+  //   setGlobalScrollPosition,
+  // } = useStore((state) => state);
 
   const TOP_MARGIN = 24;
-  const SPACING = 16;
+  const SPACING = 18;
   const topOffset = TOP_MARGIN + itemIndex * SPACING;
 
   // Initialize and check scroll position on mount
@@ -110,10 +110,7 @@ const MenuItemMobile = (props: Props) => {
   // );
 
   return (
-    <Link
-      href={`/projects/${item.slug?.current}`}
-      className="relative flex flex-wrap gap-[8px]"
-    >
+    <div className="relative flex flex-wrap gap-[8px]">
       <div className="ml-auto w-full cursor-pointer">
         <CustomImage
           asset={item?.thumbnail}
@@ -135,7 +132,7 @@ const MenuItemMobile = (props: Props) => {
 
       <div
         ref={stickyElRef}
-        className={clsx('z-10 flex w-full cursor-pointer justify-between px-1')}
+        className={clsx('z-10 flex w-full cursor-pointer justify-between')}
         style={{
           ...(isFixed && {
             top: `${topOffset}px`,
@@ -145,10 +142,17 @@ const MenuItemMobile = (props: Props) => {
           }),
         }}
       >
-        <Text>{item.title}</Text>
-        <Text>{formatDate(item.year, 'yyyy')}</Text>
+        <Link
+          href={`/projects/${item.slug?.current}`}
+          className={clsx(
+            'z-10 flex w-full cursor-pointer justify-between px-1',
+          )}
+        >
+          <Text>{item.title}</Text>
+          <Text>{formatDate(item.year, 'yyyy')}</Text>
+        </Link>
       </div>
-    </Link>
+    </div>
   );
 };
 

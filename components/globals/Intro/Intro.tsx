@@ -119,7 +119,7 @@ const Intro = (props: Props) => {
   return (
     <Box
       className={clsx(
-        'pointer-events-none fixed right-0 top-0 z-[99] h-full w-full bg-white will-change-transform',
+        'pointer-events-none fixed right-0 top-0 z-[99] h-[100svh] w-full bg-white will-change-transform lg:h-full',
         {
           'opacity-100': !globalIntroDone,
           'opacity-0': globalIntroDone,
