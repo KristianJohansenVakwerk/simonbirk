@@ -38,7 +38,7 @@ const ProjectTitle = (props: Props) => {
     <AnimatePresence mode="wait">
       <MotionBox
         className={
-          'relative mb-2 mt-2 flex cursor-pointer flex-row justify-between px-1 last:mb-0 lg:mt-0 lg:grid lg:grid-cols-6 lg:px-0'
+          'relative mb-2 mt-[64px] flex cursor-pointer flex-row justify-between px-1 last:mb-0 lg:mt-0 lg:grid lg:grid-cols-6 lg:px-0'
         }
         key={computedTitle + computedYear}
         initial={menuVariants.hide}

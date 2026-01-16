@@ -25,19 +25,16 @@ const SettingsItemsMobile = (props: Props) => {
 
   return (
     <>
-      <div className="fixed top-1 z-10 flex h-fit w-full flex-row items-end justify-between gap-1 px-1 lg:hidden">
+      <div className="fixed top-[24px] z-10 flex h-fit w-full flex-row items-end justify-between gap-1 px-1 lg:hidden">
         <Link
           href={'/'}
-          className={
-            'col-span-20 sticky top-[32px] hidden h-fit flex-row pl-1 lg:top-75 lg:col-span-2 lg:flex'
-          }
           onClick={goHome}
         >
           <Text>Simon Birk</Text>
         </Link>
         <Text>Photographer</Text>
       </div>
-      <div className="fixed bottom-[32px] z-10 flex h-fit w-full flex-row items-end justify-between gap-1 px-1 lg:hidden">
+      <div className="fixed bottom-[24px] z-10 flex h-fit w-full flex-row items-end justify-between gap-1 px-1 lg:hidden">
         {settings.info?.map((item, index) => {
           return (
             <Box
