@@ -1,8 +1,10 @@
+'use client';
 import Link from 'next/link';
 import Box from '../shared/ui/Box/Box';
 import Text from '../shared/ui/Text/Text';
 import { QuerySettingsResult } from '@/sanity/types/sanity.types';
 import clsx from 'clsx';
+import { useStore } from '@/store/store';
 
 type Props = {
   settings: QuerySettingsResult;
@@ -10,12 +12,29 @@ type Props = {
 const SettingsItemsMobile = (props: Props) => {
   const { settings } = props;
 
+  const { setGlobalShowMenu, resetGlobalScrollPosition } = useStore(
+    (state) => state,
+  );
+
   if (!settings) return;
+
+  const goHome = () => {
+    setGlobalShowMenu(true);
+    resetGlobalScrollPosition();
+  };
 
   return (
     <>
       <div className="fixed top-1 z-10 flex h-fit w-full flex-row items-end justify-between gap-1 px-1 lg:hidden">
-        <Text>Simon Birk</Text>
+        <Link
+          href={'/'}
+          className={
+            'col-span-20 sticky top-[32px] hidden h-fit flex-row pl-1 lg:top-75 lg:col-span-2 lg:flex'
+          }
+          onClick={goHome}
+        >
+          <Text>Simon Birk</Text>
+        </Link>
         <Text>Photographer</Text>
       </div>
       <div className="fixed bottom-[32px] z-10 flex h-fit w-full flex-row items-end justify-between gap-1 px-1 lg:hidden">
