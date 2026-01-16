@@ -17,6 +17,7 @@ type Props = {
 import clsx from 'clsx';
 import SettingsItems from '@/components/SettingsItems/SettingsItems';
 import NavController from '../NavController/NavController';
+import SettingsItemsMobile from '@/components/SettingsItemsMobile/SettingsItemsMobile';
 
 const HeaderClient = (props: Props) => {
   const { projects, settings } = props;
@@ -58,6 +59,7 @@ const HeaderClient = (props: Props) => {
       >
         <Text>Simon Birk</Text>
       </Link>
+      {settings && <SettingsItemsMobile settings={settings} />}
       <div className="col-span-20 lg:col-span-6 lg:mt-75">
         <NavController projects={projects} />
       </div>

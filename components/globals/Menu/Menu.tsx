@@ -35,6 +35,7 @@ const Menu = (props: Props) => {
       initial={menuVariants.hide}
       exit={menuVariants.hide}
       animate={globalShowMenu ? menuVariants.show : menuVariants.hide}
+      className="mt-[64px]"
     >
       {data?.map((item, index) => (
         <React.Fragment key={`${item._id}`}>

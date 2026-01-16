@@ -26,7 +26,7 @@ const MenuItemMobile = (props: Props) => {
   //   setGlobalScrollPosition,
   // } = useStore((state) => state);
 
-  const TOP_MARGIN = 24;
+  const TOP_MARGIN = 64;
   const SPACING = 18;
   const topOffset = TOP_MARGIN + itemIndex * SPACING;
 
@@ -111,15 +111,6 @@ const MenuItemMobile = (props: Props) => {
 
   return (
     <div className="relative flex flex-wrap gap-[8px]">
-      <div className="ml-auto w-full cursor-pointer">
-        <CustomImage
-          asset={item?.thumbnail}
-          className="h-auto w-full object-cover"
-          priority={itemIndex <= 4 ? true : false}
-          vw={[100, 25, 25]}
-        />
-      </div>
-
       {/* Spacer to prevent layout jump when element becomes fixed */}
       {isFixed && spacerHeight > 0 && (
         <div
@@ -151,6 +142,14 @@ const MenuItemMobile = (props: Props) => {
           <Text>{item.title}</Text>
           <Text>{formatDate(item.year, 'yyyy')}</Text>
         </Link>
+      </div>
+      <div className="ml-auto w-full cursor-pointer">
+        <CustomImage
+          asset={item?.thumbnail}
+          className="h-auto w-full object-cover"
+          priority={itemIndex <= 4 ? true : false}
+          vw={[100, 25, 25]}
+        />
       </div>
     </div>
   );
