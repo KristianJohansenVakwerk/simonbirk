@@ -26,7 +26,7 @@ const MenuItemMobile = (props: Props) => {
     setGlobalScrollPosition,
   } = useStore((state) => state);
 
-  const TOP_MARGIN = 64;
+  const TOP_MARGIN = 38;
   const SPACING = 18;
   const topOffset = TOP_MARGIN + itemIndex * SPACING;
 
