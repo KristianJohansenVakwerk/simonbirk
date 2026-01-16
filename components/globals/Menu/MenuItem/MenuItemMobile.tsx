@@ -19,7 +19,7 @@ const MenuItemMobile = (props: Props) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const originalOffsetTopRef = useRef<number | null>(null);
   const [isFixed, setIsFixed] = useState(false);
-  const [spacerHeight, setSpacerHeight] = useState(0);
+  // const [spacerHeight, setSpacerHeight] = useState(0);
 
   const {
     setGlobalShowMenu,
@@ -48,7 +48,7 @@ const MenuItemMobile = (props: Props) => {
     const shouldBeFixed = scrollY >= threshold;
 
     if (shouldBeFixed) {
-      setSpacerHeight(container.offsetHeight);
+      // setSpacerHeight(container.offsetHeight);
       setIsFixed(true);
     }
   }, [topOffset]);
@@ -75,7 +75,7 @@ const MenuItemMobile = (props: Props) => {
 
       // Store the height before it becomes fixed to use for spacer
       if (shouldBeFixed && !isFixed) {
-        setSpacerHeight(container.offsetHeight);
+        // setSpacerHeight(container.offsetHeight);
       }
 
       setIsFixed(shouldBeFixed);
