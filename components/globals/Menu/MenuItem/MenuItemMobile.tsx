@@ -1,9 +1,9 @@
 'use client';
 import CustomImage from '@/components/shared/ui/Image/Image';
 import Text from '@components/shared/ui/Text/Text';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { formatDate } from '@/utils/utils';
-// import { useStore } from '@/store/store';
+import { useStore } from '@/store/store';
 import Link from 'next/link';
 import clsx from 'clsx';
 
@@ -20,11 +20,11 @@ const MenuItemMobile = (props: Props) => {
   const [isFixed, setIsFixed] = useState(false);
   const [spacerHeight, setSpacerHeight] = useState(0);
 
-  // const {
-  //   setGlobalShowMenu,
-  //   setGlobalActiveProjectIndex,
-  //   setGlobalScrollPosition,
-  // } = useStore((state) => state);
+  const {
+    setGlobalShowMenu,
+    setGlobalActiveProjectIndex,
+    setGlobalScrollPosition,
+  } = useStore((state) => state);
 
   const TOP_MARGIN = 64;
   const SPACING = 18;
@@ -92,22 +92,22 @@ const MenuItemMobile = (props: Props) => {
     };
   }, [topOffset, isFixed]);
 
-  // const handleClick = useCallback(
-  //   async (slug: string | null) => {
-  //     await setGlobalActiveProjectIndex(itemIndex);
-  //     await setGlobalShowMenu(false);
+  const handleClick = useCallback(
+    (slug: string | null) => {
+      setGlobalActiveProjectIndex(itemIndex);
+      setGlobalShowMenu(false);
 
-  //     if (slug) {
-  //       await setGlobalScrollPosition();
-  //     }
-  //   },
-  //   [
-  //     itemIndex,
-  //     setGlobalActiveProjectIndex,
-  //     setGlobalShowMenu,
-  //     setGlobalScrollPosition,
-  //   ],
-  // );
+      if (slug) {
+        setGlobalScrollPosition();
+      }
+    },
+    [
+      itemIndex,
+      setGlobalActiveProjectIndex,
+      setGlobalShowMenu,
+      setGlobalScrollPosition,
+    ],
+  );
 
   return (
     <div className="relative flex flex-wrap gap-[8px]">
@@ -138,6 +138,7 @@ const MenuItemMobile = (props: Props) => {
           className={clsx(
             'z-10 flex w-full cursor-pointer justify-between px-1',
           )}
+          onClick={() => handleClick(item.slug?.current)}
         >
           <Text>{item.title}</Text>
           <Text>{formatDate(item.year, 'yyyy')}</Text>

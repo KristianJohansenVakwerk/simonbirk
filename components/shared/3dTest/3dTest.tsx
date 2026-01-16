@@ -193,7 +193,6 @@ const ThreeDTest = (props: Props) => {
         perspective: '2000px', // Increased perspective for stronger effect
         perspectiveOrigin: 'center center',
         cursor: cursor,
-        border: '1px solid red',
       }}
       onClick={handleClick}
     >

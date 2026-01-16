@@ -44,7 +44,6 @@ const ProjectTitle = (props: Props) => {
         initial={menuVariants.hide}
         animate={menuVariants.show}
         exit={menuVariants.hide}
-        style={{ border: '1px solid blue' }}
       >
         <Box
           className={'col-span-6 lg:col-span-3'}
