@@ -88,14 +88,14 @@ const MenuItem = (props: Props) => {
           style={{ height: `${height}px` }}
         >
           <div
-            className="pointer-events-auto sticky flex w-full cursor-pointer justify-between"
+            className="pointer-events-auto sticky flex w-full cursor-pointer justify-start gap-1"
             style={{
               top: TOP_MARGIN + itemIndex * SPACING,
             }}
             onClick={() => handleClick(item.slug?.current)}
           >
-            <Text className={'sticky top-0'}>{item.title}</Text>
             <Text>{formatDate(item.year, 'yyyy')}</Text>
+            <Text className={'sticky top-0'}>{item.title}</Text>
           </div>
         </div>
       </div>

@@ -47,7 +47,7 @@ const Menu = (props: Props) => {
           )}
 
           {deviceInfo.isMobile && (
-            <div className="mt-2 block">
+            <div className="mt-1 block">
               <MenuItemMobile
                 item={item}
                 itemIndex={index}
