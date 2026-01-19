@@ -17,8 +17,10 @@ const MenuItemMobile = (props: Props) => {
 
   const stickyElRef = useRef<HTMLDivElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const imageRef = useRef<HTMLDivElement | null>(null);
   const originalOffsetTopRef = useRef<number | null>(null);
   const [isFixed, setIsFixed] = useState(false);
+  const [leftOffset, setLeftOffset] = useState(0);
   // const [spacerHeight, setSpacerHeight] = useState(0);
 
   const {
@@ -30,6 +32,33 @@ const MenuItemMobile = (props: Props) => {
   const TOP_MARGIN = 38;
   const SPACING = 18;
   const topOffset = TOP_MARGIN + itemIndex * SPACING;
+
+  // Calculate left offset based on image width
+  useEffect(() => {
+    const calculateLeftOffset = () => {
+      const container = containerRef.current;
+      const image = imageRef.current;
+
+      if (!container || !image) return;
+
+      // Get the container's left position and the image width (viewport-relative for fixed positioning)
+      const containerRect = container.getBoundingClientRect();
+      const imageRect = image.getBoundingClientRect();
+
+      // Calculate left offset: container left + image width + padding
+      // For fixed positioning, left is relative to viewport, so we use getBoundingClientRect directly
+      const left = containerRect.left + imageRect.width + 16; // 4px for pl-1 padding
+      setLeftOffset(left);
+    };
+
+    calculateLeftOffset();
+
+    window.addEventListener('resize', calculateLeftOffset, { passive: true });
+
+    return () => {
+      window.removeEventListener('resize', calculateLeftOffset);
+    };
+  }, []);
 
   // Initialize and check scroll position on mount
   useEffect(() => {
@@ -66,6 +95,16 @@ const MenuItemMobile = (props: Props) => {
         const rect = stickyEl.getBoundingClientRect();
         const scrollY = window.scrollY || window.pageYOffset;
         originalOffsetTopRef.current = rect.top + scrollY;
+      }
+
+      // Recalculate left offset when scrolling (in case container position changes)
+      // For fixed positioning, left is relative to viewport
+      const containerRect = container.getBoundingClientRect();
+      const image = imageRef.current;
+      if (image) {
+        const imageRect = image.getBoundingClientRect();
+        const left = containerRect.left + imageRect.width + 16; // 4px for pl-1 padding
+        setLeftOffset(left);
       }
 
       // Check if scroll position has reached the threshold
@@ -127,14 +166,27 @@ const MenuItemMobile = (props: Props) => {
           }}
         />
       )} */}
+
+      <div
+        ref={imageRef}
+        className="w-1/4"
+      >
+        <CustomImage
+          asset={item?.thumbnail}
+          className="h-auto w-full object-cover"
+          priority={itemIndex <= 4 ? true : false}
+          vw={[100, 25, 25]}
+        />
+      </div>
       <div
         ref={stickyElRef}
-        className={clsx('z-10 flex cursor-pointer flex-row justify-between')}
+        className={clsx('z-10 flex flex-row justify-between')}
         style={{
           ...(isFixed && {
             top: `${topOffset}px`,
+            left: `${leftOffset}px`,
             position: 'fixed',
-            transition: 'top 0.2s ease-out',
+            transition: 'top 0.2s ease-out, left 0.2s ease-out',
             willChange: 'transform',
           }),
         }}
@@ -142,21 +194,13 @@ const MenuItemMobile = (props: Props) => {
         <Link
           href={`/projects/${item.slug?.current}`}
           className={clsx(
-            'z-10 flex cursor-pointer flex-row items-start justify-start gap-1',
+            'row z-10 flex w-full flex-row items-start justify-start gap-1 pl-1',
           )}
           onClick={() => handleClick(item.slug?.current)}
         >
           <Text>{formatDate(item.year, 'yyyy')}</Text>
           <Text>{item.title}</Text>
         </Link>
-      </div>
-      <div className="ml-auto w-1/3 cursor-pointer">
-        <CustomImage
-          asset={item?.thumbnail}
-          className="h-auto w-full object-cover"
-          priority={itemIndex <= 4 ? true : false}
-          vw={[100, 25, 25]}
-        />
       </div>
     </div>
   );

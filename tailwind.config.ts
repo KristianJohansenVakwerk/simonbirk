@@ -34,12 +34,15 @@ module.exports = {
         hover: '#ADADAE',
       },
       gridTemplateColumns: {
+        '15': 'repeat(15, minmax(0, 1fr))',
         '20': 'repeat(20, minmax(0, 1fr))',
+        '24': 'repeat(24, minmax(0, 1fr))',
         '21': 'repeat(21, minmax(0, 1fr))',
       },
       gridColumn: {
         'span-6': 'span 6 / span 6',
         'span-20': 'span 20 / span 20',
+        'span-24': 'span 24 / span 24',
       },
       spacing: {
         '1': '16px',

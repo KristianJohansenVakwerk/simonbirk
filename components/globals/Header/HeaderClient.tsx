@@ -44,7 +44,7 @@ const HeaderClient = (props: Props) => {
     <>
       <header
         className={clsx(
-          'relative z-20 grid h-auto grid-cols-20 gap-1 transition-opacity delay-500 duration-1000 ease-in-out',
+          'grid-cols-24 relative z-20 grid h-auto gap-1 transition-opacity delay-500 duration-1000 ease-in-out',
           {
             'opacity-0': !globalIntroDone,
             'opacity-100': globalIntroDone,
@@ -54,35 +54,20 @@ const HeaderClient = (props: Props) => {
         <Link
           href={'/'}
           className={
-            'col-span-20 sticky top-[32px] hidden h-fit flex-row pl-1 lg:top-75 lg:col-span-2 lg:flex'
+            'sticky top-75 col-span-4 hidden h-fit flex-row gap-1 pl-1 lg:flex'
           }
           onClick={goHome}
         >
           <Text>Simon Birk</Text>
+          <Text>Photographer</Text>
         </Link>
         {settings && <SettingsItemsMobile settings={settings} />}
-        <div className="col-span-20 lg:col-span-6 lg:mt-75">
+        <div className="col-span-24 lg:col-span-8 lg:mt-75">
           <NavController projects={projects} />
         </div>
 
         {settings && <SettingsItems settings={settings} />}
       </header>
-
-      {/* <div className="absolute left-1/2 top-0 flex w-[20%] -translate-x-1/2 flex-col gap-1">
-        {projects &&
-          projects.map((item, index) => {
-            return (
-              <div key={item._id}>
-                <CustomImage
-                  asset={item?.thumbnail}
-                  className="h-auto w-full object-cover"
-                  priority={index <= 4 ? true : false}
-                  vw={[100, 25, 25]}
-                />
-              </div>
-            );
-          })}
-      </div> */}
     </>
   );
 };

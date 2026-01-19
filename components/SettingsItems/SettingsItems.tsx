@@ -16,7 +16,7 @@ const SettingsItems = (props: Props) => {
       {settings.info?.map((item) => {
         return (
           <Box
-            className="sticky top-75 col-span-3 hidden h-fit flex-row gap-1 lg:flex"
+            className="sticky top-75 col-span-4 hidden h-fit flex-row gap-1 lg:flex"
             key={item._key}
           >
             <Text>{item.title}</Text>

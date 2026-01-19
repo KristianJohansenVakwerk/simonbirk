@@ -38,31 +38,27 @@ const ProjectTitle = (props: Props) => {
     <AnimatePresence mode="wait">
       <MotionBox
         className={
-          'relative mb-2 mt-[38px] flex cursor-pointer flex-row justify-between px-1 last:mb-0 lg:mt-0 lg:grid lg:grid-cols-6 lg:px-0'
+          'relative mb-2 mt-[38px] flex cursor-pointer flex-row justify-between gap-1 px-1 last:mb-0 lg:mt-0 lg:grid lg:grid-cols-8 lg:px-0'
         }
         key={computedTitle + computedYear}
         initial={menuVariants.hide}
         animate={menuVariants.show}
         exit={menuVariants.hide}
       >
-        <Box
-          className={'col-span-6 lg:col-span-3'}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        >
-          <Box className={'row flex justify-between'}>
-            <Box className={'col-span-2'}>
-              <Text>{title as string}</Text>
-            </Box>
-            <Box className={'col-span-1 flex items-end justify-end pr-1'}>
-              <Text>{formatDate(year as string)}</Text>
-            </Box>
-          </Box>
-        </Box>
-        <Box className={'col-span-6 lg:col-span-3'}>
+        <Box className={'col-span-4'}>
           <Text>
             [{globalActiveProjectCurrentIndex}/{globalActiveProjectMediaLen}]
           </Text>
+        </Box>
+        <Box
+          className={'col-span-4'}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          <Box className={'flex gap-1'}>
+            <Text>{formatDate(year as string)}</Text>
+            <Text>{title as string}</Text>
+          </Box>
         </Box>
       </MotionBox>
     </AnimatePresence>

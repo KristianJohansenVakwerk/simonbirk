@@ -35,13 +35,26 @@ const MenuItem = (props: Props) => {
   const SPACING = 16;
 
   useEffect(() => {
-    const scrollHeight = document.documentElement.scrollHeight;
-    const parentEl = parentRef.current;
+    const calculateHeight = () => {
+      const scrollHeight = document.documentElement.scrollHeight;
+      const parentEl = parentRef.current;
 
-    if (!parentEl) return;
+      if (!parentEl) return;
 
-    heightRef.current = scrollHeight - parentEl.offsetTop;
-    setHeight(scrollHeight - parentEl.offsetTop);
+      heightRef.current = scrollHeight - parentEl.offsetTop;
+      setHeight(scrollHeight - parentEl.offsetTop);
+    };
+
+    // Calculate initial height
+    calculateHeight();
+
+    // Add resize listener
+    window.addEventListener('resize', calculateHeight);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('resize', calculateHeight);
+    };
   }, []);
 
   const handleMouseEnter = useCallback(() => {
@@ -77,31 +90,12 @@ const MenuItem = (props: Props) => {
   return (
     <div
       ref={parentRef}
-      className="relative flex flex-wrap gap-1 pb-2 lg:flex-row lg:pb-1"
+      className="relative flex grid grid-cols-8 flex-wrap gap-1 pb-2 lg:flex-row lg:pb-1"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <div className="pointer-events-none absolute top-0 z-10 w-full lg:w-[calc(50%-16px)]">
-        <div
-          className="pointer-events-none"
-          ref={stickyElRef}
-          style={{ height: `${height}px` }}
-        >
-          <div
-            className="pointer-events-auto sticky flex w-full cursor-pointer justify-start gap-1"
-            style={{
-              top: TOP_MARGIN + itemIndex * SPACING,
-            }}
-            onClick={() => handleClick(item.slug?.current)}
-          >
-            <Text>{formatDate(item.year, 'yyyy')}</Text>
-            <Text className={'sticky top-0'}>{item.title}</Text>
-          </div>
-        </div>
-      </div>
-
       <div
-        className="relative ml-auto w-full cursor-pointer lg:w-1/2"
+        className="relative col-span-4 w-full cursor-pointer"
         onClick={() => handleClick(item.slug?.current)}
       >
         <CustomImage
@@ -110,6 +104,26 @@ const MenuItem = (props: Props) => {
           priority={itemIndex <= 4 ? true : false}
           vw={[100, 25, 25]}
         />
+      </div>
+      <div className="relative col-span-4">
+        <div className="pointer-events-none absolute right-0 top-0 z-10 w-full">
+          <div
+            className="pointer-events-none"
+            ref={stickyElRef}
+            style={{ height: `${height}px` }}
+          >
+            <div
+              className="pointer-events-auto sticky flex w-full cursor-pointer justify-start gap-1"
+              style={{
+                top: TOP_MARGIN + itemIndex * SPACING,
+              }}
+              onClick={() => handleClick(item.slug?.current)}
+            >
+              <Text>{formatDate(item.year, 'yyyy')}</Text>
+              <Text className={'sticky top-0'}>{item.title}</Text>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

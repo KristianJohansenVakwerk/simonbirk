@@ -51,15 +51,11 @@ const NavController = (props: Props) => {
           data={projects}
         />
       ) : (
-        <div
+        <ProjectTitle
           key="project-title"
-          className={'w-[100%]'}
-        >
-          <ProjectTitle
-            title={projects?.[globalActiveProjectIndex]?.title ?? null}
-            year={projects?.[globalActiveProjectIndex]?.year ?? null}
-          />
-        </div>
+          title={projects?.[globalActiveProjectIndex]?.title ?? null}
+          year={projects?.[globalActiveProjectIndex]?.year ?? null}
+        />
       )}
     </AnimatePresence>
   );

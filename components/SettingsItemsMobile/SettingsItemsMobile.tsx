@@ -25,7 +25,7 @@ const SettingsItemsMobile = (props: Props) => {
 
   return (
     <>
-      <div className="fixed top-[24px] z-10 flex h-fit w-full flex-row items-end justify-between gap-1 px-1 lg:hidden">
+      <div className="fixed top-[24px] z-10 flex h-fit w-full flex-row gap-1 px-1 lg:hidden">
         <Link
           href={'/'}
           onClick={goHome}
