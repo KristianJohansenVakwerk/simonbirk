@@ -95,7 +95,7 @@ const MenuItem = (props: Props) => {
       onMouseLeave={handleMouseLeave}
     >
       <div
-        className="relative col-span-4 w-full cursor-pointer"
+        className="relative col-span-3 lg:col-span-4 w-full cursor-pointer"
         onClick={() => handleClick(item.slug?.current)}
       >
         <CustomImage
@@ -105,7 +105,7 @@ const MenuItem = (props: Props) => {
           vw={[100, 25, 25]}
         />
       </div>
-      <div className="relative col-span-4">
+      <div className="relative col-span-5 lg:col-span-4">
         <div className="pointer-events-none absolute right-0 top-0 z-10 w-full">
           <div
             className="pointer-events-none"
@@ -113,7 +113,7 @@ const MenuItem = (props: Props) => {
             style={{ height: `${height}px` }}
           >
             <div
-              className="pointer-events-auto sticky flex w-full cursor-pointer justify-start gap-1"
+              className="pointer-events-auto sticky flex flex-col lg:flex-row w-full cursor-pointer justify-start gap-[6px] lg:gap-1"
               style={{
                 top: TOP_MARGIN + itemIndex * SPACING,
               }}

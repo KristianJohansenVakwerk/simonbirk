@@ -35,25 +35,25 @@ const Menu = (props: Props) => {
       initial={menuVariants.hide}
       exit={menuVariants.hide}
       animate={globalShowMenu ? menuVariants.show : menuVariants.hide}
-      className="mt-[64px] w-full lg:mt-0"
+      className="mt-[32px] w-full lg:mt-0"
     >
       {data?.map((item, index) => (
         <React.Fragment key={`${item._id}`}>
-          {deviceInfo.isDesktop && (
+          
             <MenuItem
               item={item}
               itemIndex={index}
             />
-          )}
+          
 
-          {deviceInfo.isMobile && (
+          {/* {deviceInfo.isMobile && (
             <div className="mt-1 block">
               <MenuItemMobile
                 item={item}
                 itemIndex={index}
               />
             </div>
-          )}
+          )} */}
         </React.Fragment>
       ))}
       <div className="pointer-events-none h-[100vh]" />
