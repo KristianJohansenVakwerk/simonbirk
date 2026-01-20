@@ -57,7 +57,7 @@ const ProjectTitle = (props: Props) => {
           onClick={handleMouseEnter}
         >
           <Box className={'flex gap-1'}>
-            <Text>{formatDate(year as string)}</Text>
+            <Text className='hidden lg:block'>{formatDate(year as string)}</Text>
             <Text>{title as string}</Text>
           </Box>
         </Box>

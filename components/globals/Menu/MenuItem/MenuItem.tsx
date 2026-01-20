@@ -32,7 +32,7 @@ const MenuItem = (props: Props) => {
   const deviceInfo = useDeviceDetection();
 
   const TOP_MARGIN = deviceInfo.isMobile ? 16 : 75;
-  const SPACING = deviceInfo.isMobile ? 16 : 16;
+  const SPACING = deviceInfo.isMobile ? 14 : 16;
 
   useEffect(() => {
     const calculateHeight = () => {
@@ -58,6 +58,7 @@ const MenuItem = (props: Props) => {
   }, []);
 
   const handleMouseEnter = useCallback(() => {
+    if(deviceInfo.isMobile) return;
     router.prefetch(`/projects/${item.slug?.current}`);
     setGlobalThumbIndex(itemIndex);
     setGlobalHoverProject(true);
@@ -70,6 +71,8 @@ const MenuItem = (props: Props) => {
   ]);
 
   const handleMouseLeave = useCallback(() => {
+    if(deviceInfo.isMobile) return;
+
     setGlobalThumbIndex(-1);
     setGlobalHoverProject(false);
   }, []);
@@ -90,13 +93,14 @@ const MenuItem = (props: Props) => {
   return (
     <div
       ref={parentRef}
-      className="relative flex grid grid-cols-8 flex-wrap gap-1 pb-2 lg:flex-row lg:pb-1"
+      className="group relative flex grid grid-cols-8 flex-wrap gap-1 pb-2 lg:flex-row lg:pb-1 cursor-pointer"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onClick={() => handleClick(item.slug?.current)}
     >
       <div
         className="relative col-span-4 lg:col-span-4 w-full cursor-pointer"
-        onClick={() => handleClick(item.slug?.current)}
+        
       >
         <CustomImage
           asset={item?.thumbnail}
@@ -117,10 +121,10 @@ const MenuItem = (props: Props) => {
               style={{
                 top: TOP_MARGIN + itemIndex * SPACING,
               }}
-              onClick={() => handleClick(item.slug?.current)}
+              
             >
-              <Text className='hidden lg:block'>{formatDate(item.year, 'yyyy')}</Text>
-              <Text className={'sticky top-0'}>{item.title}</Text>
+              <Text className='hidden lg:block transition-colors duration-300 ease-in-out lg:group-hover:text-gray-500'>{formatDate(item.year, 'yyyy')}</Text>
+              <Text className={'sticky top-0 transition-colors duration-300 ease-in-out lg:group-hover:text-gray-500'}>{item.title}</Text>
             </div>
           </div>
         </div>
