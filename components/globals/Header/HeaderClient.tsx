@@ -54,7 +54,7 @@ const HeaderClient = (props: Props) => {
         <Link
           href={'/'}
           className={
-            'sticky top-[16px] lg:top-75 col-span-7 lg:col-span-4 flex gap-[6px]  h-fit flex-col lg:flex-row lg:gap-1 lg:pl-1'
+            'sticky top-[16px] lg:top-75 col-span-7 lg:col-span-4 lg:flex gap-[6px]  h-fit flex-col lg:flex-row lg:gap-1 lg:pl-1 hidden '
           }
           onClick={goHome}
         >
@@ -62,7 +62,7 @@ const HeaderClient = (props: Props) => {
           <Text>Photographer</Text>
         </Link>
         {settings && <SettingsItemsMobile settings={settings} />}
-        <div className="col-span-17 lg:col-span-8 lg:mt-75">
+        <div className="col-span-24 lg:col-span-8 lg:mt-75">
           <NavController projects={projects} />
         </div>
 

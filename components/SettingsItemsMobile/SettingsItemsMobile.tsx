@@ -20,12 +20,22 @@ const SettingsItemsMobile = (props: Props) => {
 
   return (
     
-      <div className="fixed bottom-[16px] z-10 grid grid-cols-24 items-end  gap-1  lg:hidden">
+      <div className="fixed bottom-[16px] z-10 flex flex-col  items-start pl-1  gap-[6px]  lg:hidden">
+         <Link
+          href={'/'}
+          className={
+            'sticky top-[16px] lg:top-75 col-span-7 lg:col-span-4 flex gap-1  h-fit flex-row lg:flex-row lg:gap-1 lg:pl-1'
+          }
+          
+        >
+          <Text>Simon Birk</Text>
+          <Text>Photographer</Text>
+        </Link>
         {settings.info?.map((item) => {
           return (
             <Box
               key={item._key}
-              className={clsx('col-span-8 flex flex-col gap-[6px]')}
+              className={clsx('flex flex-row gap-1')}
             >
               <Text>{item.title}</Text>
 

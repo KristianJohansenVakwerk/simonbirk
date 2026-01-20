@@ -32,7 +32,7 @@ const MenuItem = (props: Props) => {
   const deviceInfo = useDeviceDetection();
 
   const TOP_MARGIN = deviceInfo.isMobile ? 16 : 75;
-  const SPACING = deviceInfo.isMobile ? 28 : 16;
+  const SPACING = deviceInfo.isMobile ? 16 : 16;
 
   useEffect(() => {
     const calculateHeight = () => {
@@ -95,7 +95,7 @@ const MenuItem = (props: Props) => {
       onMouseLeave={handleMouseLeave}
     >
       <div
-        className="relative col-span-3 lg:col-span-4 w-full cursor-pointer"
+        className="relative col-span-4 lg:col-span-4 w-full cursor-pointer"
         onClick={() => handleClick(item.slug?.current)}
       >
         <CustomImage
@@ -105,7 +105,7 @@ const MenuItem = (props: Props) => {
           vw={[100, 25, 25]}
         />
       </div>
-      <div className="relative col-span-5 lg:col-span-4">
+      <div className="relative col-span-4 lg:col-span-4">
         <div className="pointer-events-none absolute right-0 top-0 z-10 w-full">
           <div
             className="pointer-events-none"
@@ -119,7 +119,7 @@ const MenuItem = (props: Props) => {
               }}
               onClick={() => handleClick(item.slug?.current)}
             >
-              <Text>{formatDate(item.year, 'yyyy')}</Text>
+              <Text className='hidden lg:block'>{formatDate(item.year, 'yyyy')}</Text>
               <Text className={'sticky top-0'}>{item.title}</Text>
             </div>
           </div>
