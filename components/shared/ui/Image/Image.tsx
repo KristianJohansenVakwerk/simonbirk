@@ -6,6 +6,7 @@ import { sanitizeVW } from '@/utils/utils';
 type Props = {
   asset: SanityImageAsset | null;
   priority?: boolean;
+  loading?: 'lazy' | 'eager';
   className?: string;
   blur?: boolean;
   loadDone?: () => void | null;
@@ -16,6 +17,7 @@ const CustomImage = (props: Props) => {
   const {
     asset,
     priority = false,
+    loading,
     blur = false,
     loadDone = null,
     className = '',
@@ -42,6 +44,7 @@ const CustomImage = (props: Props) => {
         width={width}
         height={height}
         priority={priority}
+        loading={loading}
         placeholder={blur ? 'blur' : 'empty'}
         blurDataURL={blurSrc}
         className={className}

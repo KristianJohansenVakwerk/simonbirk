@@ -55,3 +55,32 @@ export const preloadProjectImages = (data: QueryProjectsResult[number]) => {
     }
   });
 };
+
+/**
+ * Safari-specific image preloading using both link preload and Image object
+ * This dual approach ensures better compatibility with Safari's lazy loading behavior
+ */
+export const preloadImageForSafari = (asset: any) => {
+  if (!asset || typeof window === 'undefined') return;
+
+  const src = urlFor(asset)?.format('webp').url();
+  if (!src) return;
+
+  // Method 1: Link preload (works well in Safari)
+  // Check if already preloaded to avoid duplicates
+  const existingLink = document.querySelector(
+    `link[rel="preload"][href="${src}"]`,
+  );
+  if (!existingLink) {
+    const link = document.createElement('link');
+    link.rel = 'preload';
+    link.as = 'image';
+    link.href = src;
+    link.setAttribute('type', 'image/webp');
+    document.head.appendChild(link);
+  }
+
+  // Method 2: Image object (fallback for older Safari)
+  const img = new Image();
+  img.src = src;
+};
