@@ -58,7 +58,7 @@ const MenuItem = (props: Props) => {
   }, []);
 
   const handleMouseEnter = useCallback(() => {
-    if(deviceInfo.isMobile) return;
+    if(deviceInfo.isTouchDevice) return;
     router.prefetch(`/projects/${item.slug?.current}`);
     setGlobalThumbIndex(itemIndex);
     setGlobalHoverProject(true);
@@ -68,14 +68,15 @@ const MenuItem = (props: Props) => {
     router,
     setGlobalHoverProject,
     setGlobalThumbIndex,
+    deviceInfo.isTouchDevice,
   ]);
 
   const handleMouseLeave = useCallback(() => {
-    if(deviceInfo.isMobile) return;
+    if(deviceInfo.isTouchDevice) return;
 
     setGlobalThumbIndex(-1);
     setGlobalHoverProject(false);
-  }, []);
+  }, [deviceInfo.isTouchDevice]);
 
   const handleClick = useCallback(
     async (slug: string | null) => {
