@@ -19,22 +19,13 @@ const SettingsItemsMobile = (props: Props) => {
  
 
   return (
-    <>
-      {/* <div className="fixed top-[24px] z-10 flex h-fit w-full flex-row gap-1 px-1 lg:hidden">
-        <Link
-          href={'/'}
-          onClick={goHome}
-        >
-          <Text>Simon Birk</Text>
-        </Link>
-        <Text>Photographer</Text>
-      </div> */}
-      <div className="fixed bottom-[24px] z-10 flex h-fit w-full flex-row items-end justify-between gap-1 px-1 lg:hidden">
+    
+      <div className="fixed bottom-[16px] z-10 grid grid-cols-24 items-end  gap-1  lg:hidden">
         {settings.info?.map((item) => {
           return (
             <Box
               key={item._key}
-              className={clsx('flex flex-col gap-[6px]')}
+              className={clsx('col-span-8 flex flex-col gap-[6px]')}
             >
               <Text>{item.title}</Text>
 
@@ -53,7 +44,7 @@ const SettingsItemsMobile = (props: Props) => {
           );
         })}
       </div>
-    </>
+    
   );
 };
 
