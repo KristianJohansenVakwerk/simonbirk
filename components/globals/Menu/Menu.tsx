@@ -7,8 +7,8 @@ import MenuItem from './MenuItem/MenuItem';
 import { motion } from 'motion/react';
 import { menuVariants } from '@/utils/animationUtils';
 import React from 'react';
-import MenuItemMobile from './MenuItem/MenuItemMobile';
-import { useDeviceDetection } from '@/utils/useDeviceDetection';
+
+
 
 type Props = {
   data: QueryProjectsResult | null;
@@ -20,7 +20,7 @@ const Menu = (props: Props) => {
   const { globalShowMenu, setGlobalShowMenu, setGlobalScrollPosition } =
     useStore((state) => state);
 
-  const deviceInfo = useDeviceDetection();
+  
 
   const handleMouseLeave = useCallback(() => {
     setGlobalScrollPosition();
@@ -35,7 +35,7 @@ const Menu = (props: Props) => {
       initial={menuVariants.hide}
       exit={menuVariants.hide}
       animate={globalShowMenu ? menuVariants.show : menuVariants.hide}
-      className="mt-[32px] w-full lg:mt-0"
+      className="mt-[16px] w-full lg:mt-0"
     >
       {data?.map((item, index) => (
         <React.Fragment key={`${item._id}`}>

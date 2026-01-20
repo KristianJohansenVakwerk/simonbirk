@@ -31,8 +31,8 @@ const MenuItem = (props: Props) => {
 
   const deviceInfo = useDeviceDetection();
 
-  const TOP_MARGIN = deviceInfo.isMobile ? 32 : 75;
-  const SPACING = 16;
+  const TOP_MARGIN = deviceInfo.isMobile ? 16 : 75;
+  const SPACING = deviceInfo.isMobile ? 28 : 16;
 
   useEffect(() => {
     const calculateHeight = () => {

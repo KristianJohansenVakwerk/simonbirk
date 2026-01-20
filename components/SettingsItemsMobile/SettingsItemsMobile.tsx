@@ -4,7 +4,7 @@ import Box from '../shared/ui/Box/Box';
 import Text from '../shared/ui/Text/Text';
 import { QuerySettingsResult } from '@/sanity/types/sanity.types';
 import clsx from 'clsx';
-import { useStore } from '@/store/store';
+
 
 type Props = {
   settings: QuerySettingsResult;
@@ -12,16 +12,11 @@ type Props = {
 const SettingsItemsMobile = (props: Props) => {
   const { settings } = props;
 
-  const { setGlobalShowMenu, resetGlobalScrollPosition } = useStore(
-    (state) => state,
-  );
+  
 
   if (!settings) return;
 
-  const goHome = () => {
-    setGlobalShowMenu(true);
-    resetGlobalScrollPosition();
-  };
+ 
 
   return (
     <>
@@ -35,7 +30,7 @@ const SettingsItemsMobile = (props: Props) => {
         <Text>Photographer</Text>
       </div> */}
       <div className="fixed bottom-[24px] z-10 flex h-fit w-full flex-row items-end justify-between gap-1 px-1 lg:hidden">
-        {settings.info?.map((item, index) => {
+        {settings.info?.map((item) => {
           return (
             <Box
               key={item._key}

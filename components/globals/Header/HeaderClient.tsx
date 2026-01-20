@@ -54,7 +54,7 @@ const HeaderClient = (props: Props) => {
         <Link
           href={'/'}
           className={
-            'sticky top-[32px] lg:top-75 col-span-7 lg:col-span-4 flex gap-[6px]  h-fit flex-col lg:flex-row lg:gap-1 lg:pl-1'
+            'sticky top-[16px] lg:top-75 col-span-7 lg:col-span-4 flex gap-[6px]  h-fit flex-col lg:flex-row lg:gap-1 lg:pl-1'
           }
           onClick={goHome}
         >
