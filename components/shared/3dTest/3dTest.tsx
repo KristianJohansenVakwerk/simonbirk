@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 import { QueryProjectBySlugResult } from '@/sanity/types/sanity.types';
 import CustomImage from '@components/shared/ui/Image/Image';
 import { useStore } from '@/store/store';
+import { urlFor } from '@/sanity/lib/image';
+import clsx from 'clsx';
 
 type Props = {
   data: QueryProjectBySlugResult;
@@ -22,7 +24,9 @@ const ThreeDTest = (props: Props) => {
     setGlobalActiveProjectCurrentIndex,
   } = useStore((state) => state);
 
-  const [cursor, setCursor] = useState<'n-resize' | 's-resize'>('n-resize');
+  const [cursorClass, setCursorClass] = useState<
+    'cursor-n-resize' | 'cursor-s-resize'
+  >('cursor-n-resize');
   const containerRef = useRef<HTMLDivElement>(null);
   const initialRef = useRef<boolean>(true);
 
@@ -101,9 +105,17 @@ const ThreeDTest = (props: Props) => {
       const { y, whhalf } = getClientY(event);
 
       if (y <= whhalf) {
-        setCursor('n-resize');
+        setCursorClass('cursor-n-resize');
+        // Safari fallback: set cursor on document.body
+        if (typeof document !== 'undefined') {
+          document.body.style.cursor = 'n-resize';
+        }
       } else {
-        setCursor('s-resize');
+        setCursorClass('cursor-s-resize');
+        // Safari fallback: set cursor on document.body
+        if (typeof document !== 'undefined') {
+          document.body.style.cursor = 's-resize';
+        }
       }
     };
 
@@ -134,6 +146,10 @@ const ThreeDTest = (props: Props) => {
     return () => {
       window.removeEventListener('keyup', handleKeyUp);
       window.removeEventListener('mousemove', handleMousemove);
+      // Reset body cursor on cleanup
+      if (typeof document !== 'undefined') {
+        document.body.style.cursor = '';
+      }
     };
   }, []);
 
@@ -183,16 +199,47 @@ const ThreeDTest = (props: Props) => {
     resetGlobalScrollPosition,
   ]);
 
+  // Dynamic loading strategy for Safari compatibility
+  const getLoadingProps = (index: number) => {
+    // First 3 images: priority (blocks render, loads immediately)
+    if (index <= 2) {
+      return { priority: true, loading: 'eager' as const };
+    }
+    // Images within active window + 3 ahead: eager but not priority
+    if (index >= activeIndex && index < activeIndex + 4) {
+      return { priority: false, loading: 'eager' as const };
+    }
+    // Rest: lazy load
+    return { priority: false, loading: 'lazy' as const };
+  };
+
+  // Preload next images for Safari compatibility
+  useEffect(() => {
+    // Preload next 2-3 images when activeIndex changes
+    const imagesToPreload = combinedMedia.slice(activeIndex + 1, activeIndex + 4);
+    imagesToPreload.forEach((item) => {
+      if (item?.asset) {
+        const src = urlFor(item.asset)?.format('webp').url();
+        if (src && typeof window !== 'undefined') {
+          // Create image element to force browser to fetch
+          const img = new Image();
+          img.src = src;
+        }
+      }
+    });
+  }, [activeIndex, combinedMedia]);
+
   return (
     <Box
       ref={containerRef}
-      className={
-        'fixed left-0 top-0 flex h-[100svh] w-[100vw] flex-col overflow-hidden lg:h-[100vh]'
-      }
+      className={clsx(
+        'fixed left-0 top-0 flex h-[100svh] w-[100vw] flex-col overflow-hidden select-none outline-none lg:h-[100vh]',
+        cursorClass,
+      )}
       style={{
         perspective: '2000px', // Increased perspective for stronger effect
         perspectiveOrigin: 'center center',
-        cursor: cursor,
+        pointerEvents: 'auto', // Explicitly set for Safari
       }}
       onClick={handleClick}
     >
@@ -221,7 +268,7 @@ const ThreeDTest = (props: Props) => {
               asset={item?.asset}
               className="pointer-events-none h-full w-auto origin-center select-none object-contain object-center transition-all duration-300 ease-in-out will-change-transform"
               vw={[100, 50, 50]}
-              priority={index <= 2 ? true : false}
+              {...getLoadingProps(index)}
             />
           </Box>
         );
