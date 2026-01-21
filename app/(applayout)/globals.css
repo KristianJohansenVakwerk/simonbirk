@@ -32,6 +32,16 @@
   --spacing: 15px;
 }
 
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #181716;
+    --foreground: #e5e5e5;
+    --text-color: #e5e5e5;
+    --link-color: #e5e5e5;
+    --link-hover-color: #e5e5e5;
+  }
+}
+
 @media (max-width: 768px) {
   :root {
     --font-size: 10px;
