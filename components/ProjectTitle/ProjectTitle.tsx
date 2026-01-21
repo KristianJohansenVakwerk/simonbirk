@@ -5,7 +5,7 @@ import Text from '../shared/ui/Text/Text';
 import { useStore } from '@/store/store';
 import { useCallback } from 'react';
 import { usePathname } from 'next/navigation';
-import { AnimatePresence, motion } from 'motion/react';
+import { motion } from 'motion/react';
 import { menuVariants } from '@/utils/animationUtils';
 
 interface Props {
