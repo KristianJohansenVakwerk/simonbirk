@@ -98,7 +98,7 @@ const ThreeDTest = (props: Props) => {
   useEffect(() => {
     if (!data?.media?.length) return;
     setGlobalActiveProjectMediaLen(data.media.length);
-  }, []);
+  }, [data?.media?.length, setGlobalActiveProjectMediaLen]);
 
   useEffect(() => {
     const handleMousemove = (event: MouseEvent) => {
@@ -133,7 +133,6 @@ const ThreeDTest = (props: Props) => {
             return --prev;
           });
           break;
-
       }
     };
 
@@ -213,7 +212,10 @@ const ThreeDTest = (props: Props) => {
   // Preload next images for Safari compatibility
   useEffect(() => {
     // Preload next 2-3 images when activeIndex changes
-    const imagesToPreload = combinedMedia.slice(activeIndex + 1, activeIndex + 4);
+    const imagesToPreload = combinedMedia.slice(
+      activeIndex + 1,
+      activeIndex + 4,
+    );
     imagesToPreload.forEach((item) => {
       if (item?.asset) {
         const src = urlFor(item.asset)?.format('webp').url();
@@ -230,7 +232,7 @@ const ThreeDTest = (props: Props) => {
     <Box
       ref={containerRef}
       className={clsx(
-        'fixed left-0 top-0 flex h-[100svh] w-[100vw] flex-col overflow-hidden select-none outline-none lg:h-[100vh]',
+        'fixed left-0 top-0 flex h-full w-full select-none flex-col overflow-hidden outline-none',
         cursorClass,
       )}
       style={{
