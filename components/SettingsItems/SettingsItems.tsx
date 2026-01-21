@@ -9,7 +9,7 @@ type Props = {
 const SettingsItems = (props: Props) => {
   const { settings } = props;
 
-  if (!settings) return;
+  if (!settings) return null;
 
   return (
     <>

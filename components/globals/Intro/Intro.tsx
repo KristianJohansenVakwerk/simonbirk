@@ -6,7 +6,7 @@ import Box from '@/components/shared/ui/Box/Box';
 import { motion } from 'motion/react';
 import { useStore } from '@/store/store';
 import clsx from 'clsx';
-
+import { introVariants } from '@/utils/animationUtils';
 type Props = { projects: QueryProjectsResult | null };
 const Intro = (props: Props) => {
   const { projects } = props;
@@ -22,26 +22,6 @@ const Intro = (props: Props) => {
   const handleLoadDone = useCallback(() => {
     setLoadedCount((prev) => ++prev);
   }, []);
-
-  const variants = {
-    initial: {
-      opacity: 0,
-    },
-    hide: {
-      opacity: 0,
-      transition: {
-        duration: 0.2,
-        ease: [0.4, 0, 0.2, 1], // Custom easing for smoother feel
-      },
-    },
-    show: {
-      opacity: 1,
-      transition: {
-        duration: 0.2,
-        ease: [0.4, 0, 0.2, 1], // Custom easing for smoother feel
-      },
-    },
-  };
 
   useEffect(() => {
     // Only start if all images are loaded, animation hasn't started, and we have projects
@@ -69,7 +49,7 @@ const Intro = (props: Props) => {
           setActiveIndex((prev) => {
             const next = prev + 1;
 
-            if (next >= projects.length) {
+            if (next >= projects.length - 1) {
               if (intervalRef.current) {
                 clearTimeout(intervalRef.current);
                 intervalRef.current = null;
@@ -106,8 +86,9 @@ const Intro = (props: Props) => {
 
   useEffect(() => {
     if (introDone) {
-      // introEnd();
-      setGlobalIntroDone(true);
+      setTimeout(() => {
+        setGlobalIntroDone(true);
+      }, 500);
     }
   }, [introDone, setGlobalIntroDone]);
 
@@ -119,7 +100,7 @@ const Intro = (props: Props) => {
   return (
     <Box
       className={clsx(
-        'pointer-events-none fixed right-0 top-0 z-[99] h-[100svh] w-full bg-white will-change-transform lg:h-full',
+        'pointer-events-none fixed right-0 top-0 z-[99] h-[100svh] w-full bg-white transition-opacity duration-500 ease-in-out lg:h-full',
         {
           'opacity-100': !globalIntroDone,
           'opacity-0': globalIntroDone,
@@ -130,9 +111,11 @@ const Intro = (props: Props) => {
         <React.Fragment key={item._id}>
           <motion.div
             key={item._id}
-            initial="initial"
-            variants={variants}
-            animate={index === activeIndex ? 'show' : 'hide'}
+            initial={introVariants.hide}
+            exit={introVariants.hide}
+            animate={
+              index === activeIndex ? introVariants.show : introVariants.hide
+            }
           >
             <CustomImage
               asset={item?.thumbnail}

@@ -58,7 +58,7 @@ const MenuItem = (props: Props) => {
   }, []);
 
   const handleMouseEnter = useCallback(() => {
-    if(deviceInfo.isTouchDevice) return;
+    if (deviceInfo.isTouchDevice) return;
     router.prefetch(`/projects/${item.slug?.current}`);
     setGlobalThumbIndex(itemIndex);
     setGlobalHoverProject(true);
@@ -72,37 +72,56 @@ const MenuItem = (props: Props) => {
   ]);
 
   const handleMouseLeave = useCallback(() => {
-    if(deviceInfo.isTouchDevice) return;
+    if (deviceInfo.isTouchDevice) return;
 
     setGlobalThumbIndex(-1);
     setGlobalHoverProject(false);
-  }, [deviceInfo.isTouchDevice]);
+  }, [deviceInfo.isTouchDevice, setGlobalHoverProject, setGlobalThumbIndex]);
 
   const handleClick = useCallback(
     async (slug: string | null) => {
-      await setGlobalActiveProjectIndex(itemIndex);
-      await setGlobalShowMenu(false);
+      if (deviceInfo.isTouchDevice) {
+        setGlobalThumbIndex(itemIndex);
+        setGlobalHoverProject(true);
+        router.prefetch(`/projects/${item.slug?.current}`);
 
-      if (slug) {
-        await setGlobalScrollPosition();
-        await router.push(`/projects/${slug}`);
+        setTimeout(async () => {
+          setGlobalShowMenu(false);
+          await router.push(`/projects/${slug}`);
+        }, 100);
+      } else {
+        setGlobalActiveProjectIndex(itemIndex);
+        setGlobalShowMenu(false);
+
+        if (slug) {
+          setGlobalScrollPosition();
+
+          await router.push(`/projects/${slug}`);
+        }
       }
     },
-    [itemIndex, router, setGlobalActiveProjectIndex, setGlobalShowMenu],
+    [
+      deviceInfo.isTouchDevice,
+      setGlobalThumbIndex,
+      itemIndex,
+      setGlobalHoverProject,
+      router,
+      item.slug,
+      setGlobalShowMenu,
+      setGlobalActiveProjectIndex,
+      setGlobalScrollPosition,
+    ],
   );
 
   return (
     <div
       ref={parentRef}
-      className="group relative flex grid grid-cols-8 flex-wrap gap-1 pb-2 lg:flex-row lg:pb-1 cursor-pointer"
+      className="relativer group grid cursor-pointer grid-cols-8 flex-wrap gap-1 pb-2 lg:flex-row lg:pb-1"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={() => handleClick(item.slug?.current)}
     >
-      <div
-        className="relative col-span-4 lg:col-span-4 w-full cursor-pointer"
-        
-      >
+      <div className="relative col-span-4 w-full cursor-pointer lg:col-span-4">
         <CustomImage
           asset={item?.thumbnail}
           className="h-auto w-full object-cover"
@@ -118,14 +137,21 @@ const MenuItem = (props: Props) => {
             style={{ height: `${height}px` }}
           >
             <div
-              className="pointer-events-auto sticky flex flex-col lg:flex-row w-full cursor-pointer justify-start gap-[6px] lg:gap-1"
+              className="pointer-events-auto sticky flex w-full cursor-pointer flex-col justify-start gap-[6px] lg:flex-row lg:gap-1"
               style={{
                 top: TOP_MARGIN + itemIndex * SPACING,
               }}
-              
             >
-              <Text className='hidden lg:block transition-colors duration-300 ease-in-out lg:group-hover:text-gray-500'>{formatDate(item.year, 'yyyy')}</Text>
-              <Text className={'sticky top-0 transition-colors duration-300 ease-in-out lg:group-hover:text-gray-500'}>{item.title}</Text>
+              <Text className="hidden transition-colors duration-300 ease-in-out lg:block lg:group-hover:text-hover">
+                {formatDate(item.year, 'yyyy')}
+              </Text>
+              <Text
+                className={
+                  'sticky top-0 transition-colors duration-300 ease-in-out lg:group-hover:text-hover'
+                }
+              >
+                {item.title}
+              </Text>
             </div>
           </div>
         </div>

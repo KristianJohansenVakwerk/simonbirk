@@ -48,6 +48,8 @@ const HeaderClient = (props: Props) => {
           {
             'opacity-0': !globalIntroDone,
             'opacity-100': globalIntroDone,
+            'pointer-events-none': !globalIntroDone,
+            'pointer-events-auto': globalIntroDone
           },
         )}
       >

@@ -134,9 +134,6 @@ const ThreeDTest = (props: Props) => {
           });
           break;
 
-        default:
-          return;
-          break;
       }
     };
 

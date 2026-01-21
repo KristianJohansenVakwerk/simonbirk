@@ -34,7 +34,7 @@ const Menu = (props: Props) => {
       onMouseLeave={handleMouseLeave}
       initial={menuVariants.hide}
       exit={menuVariants.hide}
-      animate={globalShowMenu ? menuVariants.show : menuVariants.hide}
+      animate={menuVariants.show}
       className="mt-[16px] w-full lg:mt-0"
     >
       {data?.map((item, index) => (
@@ -46,14 +46,7 @@ const Menu = (props: Props) => {
             />
           
 
-          {/* {deviceInfo.isMobile && (
-            <div className="mt-1 block">
-              <MenuItemMobile
-                item={item}
-                itemIndex={index}
-              />
-            </div>
-          )} */}
+         
         </React.Fragment>
       ))}
       <div className="pointer-events-none h-[100vh]" />

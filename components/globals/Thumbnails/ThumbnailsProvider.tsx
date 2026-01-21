@@ -16,7 +16,7 @@ const ThumbnailsProvider = (props: Props) => {
     (state) => state,
   );
 
-  const clearTImer = () => {
+  const clearTimer = () => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
@@ -31,7 +31,7 @@ const ThumbnailsProvider = (props: Props) => {
           setLocalShowThumbs(true);
         }, 1000);
       } else {
-        clearTImer();
+        clearTimer();
         setLocalShowThumbs(false);
       }
     };

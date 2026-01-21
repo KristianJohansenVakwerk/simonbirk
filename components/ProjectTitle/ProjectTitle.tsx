@@ -35,34 +35,32 @@ const ProjectTitle = (props: Props) => {
   const computedYear = year ? year : '';
 
   return (
-    <AnimatePresence mode="wait">
-      <MotionBox
-        className={
-          'relative mb-2 mt-[16px]  cursor-pointer  gap-1 lg:px-1 last:mb-0 lg:mt-0 grid grid-cols-8 lg:px-0'
-        }
-        key={computedTitle + computedYear}
-        initial={menuVariants.hide}
-        animate={menuVariants.show}
-        exit={menuVariants.hide}
+    <MotionBox
+      className={
+        'relative mb-2 mt-[16px] grid cursor-pointer grid-cols-8 gap-1 last:mb-0 lg:mt-0 lg:px-0 lg:px-1'
+      }
+      key={computedTitle + computedYear}
+      initial={menuVariants.hide}
+      animate={menuVariants.show}
+      exit={menuVariants.hide}
+    >
+      <Box className={'col-span-4'}>
+        <Text>
+          [{globalActiveProjectCurrentIndex}/{globalActiveProjectMediaLen}]
+        </Text>
+      </Box>
+      <Box
+        className={'col-span-4 pb-1'}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        onClick={handleMouseEnter}
       >
-        <Box className={'col-span-4'}>
-          <Text>
-            [{globalActiveProjectCurrentIndex}/{globalActiveProjectMediaLen}]
-          </Text>
+        <Box className={'flex gap-1'}>
+          <Text className="hidden lg:block">{formatDate(year as string)}</Text>
+          <Text>{title as string}</Text>
         </Box>
-        <Box
-          className={'col-span-4'}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-          onClick={handleMouseEnter}
-        >
-          <Box className={'flex gap-1'}>
-            <Text className='hidden lg:block'>{formatDate(year as string)}</Text>
-            <Text>{title as string}</Text>
-          </Box>
-        </Box>
-      </MotionBox>
-    </AnimatePresence>
+      </Box>
+    </MotionBox>
   );
 };
 
