@@ -6,8 +6,9 @@ import { useRouter } from 'next/navigation';
 import { QueryProjectBySlugResult } from '@/sanity/types/sanity.types';
 import CustomImage from '@components/shared/ui/Image/Image';
 import { useStore } from '@/store/store';
-import { urlFor } from '@/sanity/lib/image';
+// import { urlFor } from '@/sanity/lib/image';
 import clsx from 'clsx';
+import { useDeviceDetection } from '@/utils/useDeviceDetection';
 
 type Props = {
   data: QueryProjectBySlugResult;
@@ -24,6 +25,8 @@ const ThreeDTest = (props: Props) => {
     globalShowMenu,
   } = useStore((state) => state);
 
+  const deviceInfo = useDeviceDetection();
+
   const [cursorClass, setCursorClass] = useState<
     'cursor-w-resize' | 'cursor-e-resize'
   >('cursor-w-resize');
@@ -39,6 +42,10 @@ const ThreeDTest = (props: Props) => {
     [data?.media, data?.nextProject?.media],
   );
 
+  const isTouchDevice = deviceInfo.isTouchDevice || deviceInfo.isMobile;
+
+  const zMultiplier = isTouchDevice ? -100 : -8000;
+  console.log('isTouchDevice', zMultiplier);
   const [scales, setScales] = useState<
     {
       show: boolean;
@@ -50,7 +57,7 @@ const ThreeDTest = (props: Props) => {
     combinedMedia.map((item, index) => ({
       show: index >= activeIndex && index < activeIndex + 2,
       scale: index === 0 ? 1 : 0.1 ** (index - activeIndex),
-      z: (index - activeIndex) * -8000,
+      z: (index - activeIndex) * zMultiplier,
       opacity: index === 0 ? 1 : 0,
     })),
   );
@@ -62,7 +69,7 @@ const ThreeDTest = (props: Props) => {
         ...e,
         show: index >= activeIndex && index < activeIndex + 2,
         scale: index === activeIndex ? 1 : 0.1 ** (index - activeIndex),
-        z: (index - activeIndex) * -8000,
+        z: (index - activeIndex) * zMultiplier,
         opacity:
           index >= activeIndex &&
           index < activeIndex + 2 &&
@@ -71,7 +78,7 @@ const ThreeDTest = (props: Props) => {
             : 0,
       }));
     });
-  }, [activeIndex]);
+  }, [activeIndex, zMultiplier]);
 
   useEffect(() => {
     setGlobalActiveProjectCurrentIndex(1);
@@ -101,6 +108,8 @@ const ThreeDTest = (props: Props) => {
   }, [data?.media?.length, setGlobalActiveProjectMediaLen]);
 
   useEffect(() => {
+    const isTouchDevice = deviceInfo.isTouchDevice || deviceInfo.isMobile;
+
     const handleMousemove = (event: MouseEvent) => {
       const { x, wwhalf } = getClientY(event);
 
@@ -147,12 +156,16 @@ const ThreeDTest = (props: Props) => {
       }
     };
 
-    window.addEventListener('keyup', handleKeyUp);
-    window.addEventListener('mousemove', handleMousemove);
+    if (!isTouchDevice) {
+      window.addEventListener('keyup', handleKeyUp);
+      window.addEventListener('mousemove', handleMousemove);
+    }
 
     return () => {
-      window.removeEventListener('keyup', handleKeyUp);
-      window.removeEventListener('mousemove', handleMousemove);
+      if (!isTouchDevice) {
+        window.removeEventListener('keyup', handleKeyUp);
+        window.removeEventListener('mousemove', handleMousemove);
+      }
       // Reset body cursor on cleanup
       if (typeof document !== 'undefined') {
         document.body.style.cursor = '';
@@ -226,23 +239,30 @@ const ThreeDTest = (props: Props) => {
   };
 
   // Preload next images for Safari compatibility
-  useEffect(() => {
-    // Preload next 2-3 images when activeIndex changes
-    const imagesToPreload = combinedMedia.slice(
-      activeIndex + 1,
-      activeIndex + 4,
-    );
-    imagesToPreload.forEach((item) => {
-      if (item?.asset) {
-        const src = urlFor(item.asset)?.format('webp').url();
-        if (src && typeof window !== 'undefined') {
-          // Create image element to force browser to fetch
-          const img = new Image();
-          img.src = src;
-        }
-      }
-    });
-  }, [activeIndex, combinedMedia]);
+  // useEffect(() => {
+  //   // Preload next 2-3 images when activeIndex changes
+  //   const imagesToPreload = combinedMedia.slice(
+  //     activeIndex + 1,
+  //     activeIndex + 4,
+  //   );
+  //   imagesToPreload.forEach((item) => {
+  //     if (item?.asset) {
+  //       const src = urlFor(item.asset)?.format('webp').url();
+  //       if (src && typeof window !== 'undefined') {
+  //         // Create image element to force browser to fetch
+  //         const img = new Image();
+  //         img.src = src;
+  //       }
+  //     }
+  //   });
+
+  //   return () => {
+  //     imagesToPreload.forEach((img: any) => {
+  //       img.src = '';
+  //     }
+
+  //   }
+  // }, [activeIndex, combinedMedia]);
 
   return (
     <Box
@@ -256,7 +276,7 @@ const ThreeDTest = (props: Props) => {
         { 'opacity-100': !globalShowMenu },
       )}
       style={{
-        perspective: '2000px', // Increased perspective for stronger effect
+        perspective: isTouchDevice ? '100px' : '2000px', // Increased perspective for stronger effect
         perspectiveOrigin: 'center center',
         pointerEvents: 'auto', // Explicitly set for Safari
       }}
@@ -279,8 +299,8 @@ const ThreeDTest = (props: Props) => {
               zIndex: combinedMedia.length - index,
               opacity: scales[index]?.opacity ?? 0,
               transform: `translate(-50%, -50%) translate3d(0, 0, ${scales[index].z}px)`,
-              transition: `all 0.3s ease-in-out`,
-              willChange: 'transform',
+              transition: `all .3s ease-in-out`,
+              willChange: scales[index]?.opacity > 0 ? 'transform' : 'auto',
             }}
           >
             <CustomImage
