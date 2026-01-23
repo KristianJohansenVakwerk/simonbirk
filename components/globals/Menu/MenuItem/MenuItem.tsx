@@ -4,7 +4,7 @@ import Text from '@components/shared/ui/Text/Text';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { formatDate } from '@/utils/utils';
 import { useStore } from '@/store/store';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useDeviceDetection } from '@/utils/useDeviceDetection';
 
 type Props = {
@@ -20,7 +20,7 @@ const MenuItem = (props: Props) => {
   const heightRef = useRef<number | null>(null);
   const [height, setHeight] = useState(0);
   const router = useRouter();
-
+  const pathname = usePathname();
   const {
     setGlobalHoverProject,
     setGlobalThumbIndex,
@@ -84,7 +84,15 @@ const MenuItem = (props: Props) => {
         setGlobalThumbIndex(itemIndex);
         setGlobalHoverProject(true);
 
-        await router.push(`/projects/${slug}`);
+        const isOnProjectPage = pathname.startsWith('/projects/');
+
+        if (isOnProjectPage) {
+          router.push(`/projects/${slug}`);
+          setTimeout(() => setGlobalShowMenu(false), 500);
+        } else {
+          setGlobalShowMenu(false);
+          setTimeout(() => router.push(`/projects/${slug}`), 400);
+        }
       } else {
         setGlobalActiveProjectIndex(itemIndex);
         setGlobalShowMenu(false);
@@ -105,6 +113,7 @@ const MenuItem = (props: Props) => {
       router,
       setGlobalActiveProjectIndex,
       setGlobalScrollPosition,
+      pathname,
     ],
   );
 

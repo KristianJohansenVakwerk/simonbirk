@@ -44,19 +44,19 @@ const HeaderClient = (props: Props) => {
     <>
       <header
         className={clsx(
-          'grid-cols-24 relative z-20 grid h-auto gap-1 transition-opacity delay-500 duration-1000 ease-in-out px-1 lg:px-0',
+          'relative z-20 flex h-auto flex-col gap-1 px-1 transition-opacity delay-500 duration-1000 ease-in-out lg:grid lg:grid-cols-24 lg:px-0',
           {
             'opacity-0': !globalIntroDone,
             'opacity-100': globalIntroDone,
             'pointer-events-none': !globalIntroDone,
-            'pointer-events-auto': globalIntroDone
+            'pointer-events-auto': globalIntroDone,
           },
         )}
       >
         <Link
           href={'/'}
           className={
-            'sticky top-[16px] lg:top-75 col-span-7 lg:col-span-4 lg:flex gap-[6px]  h-fit flex-col lg:flex-row lg:gap-1 lg:pl-1 hidden '
+            'sticky top-[16px] col-span-7 hidden h-fit flex-col gap-[6px] lg:top-75 lg:col-span-4 lg:flex lg:flex-row lg:gap-1 lg:pl-1'
           }
           onClick={goHome}
         >
@@ -64,7 +64,7 @@ const HeaderClient = (props: Props) => {
           <Text>Photographer</Text>
         </Link>
         {settings && <SettingsItemsMobile settings={settings} />}
-        <div className="col-span-24 lg:col-span-8 lg:mt-75">
+        <div className="w-full lg:col-span-8 lg:mt-75 lg:w-auto">
           <NavController projects={projects} />
         </div>
 
