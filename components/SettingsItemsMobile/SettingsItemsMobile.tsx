@@ -14,7 +14,7 @@ const SettingsItemsMobile = (props: Props) => {
   if (!settings) return;
 
   return (
-    <div className="fixed bottom-[8px] left-0 z-10 grid h-fit w-full grid-cols-8 items-start gap-1 px-1 lg:hidden">
+    <div className="fixed bottom-[8px] left-0 z-10 grid h-auto w-full grid-cols-8 gap-1 px-1 lg:hidden">
       <div className="pointer-events-none col-span-4" />
 
       <div className="col-span-4 flex flex-col items-start gap-[6px]">
