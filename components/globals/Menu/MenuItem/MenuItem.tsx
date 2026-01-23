@@ -79,19 +79,21 @@ const MenuItem = (props: Props) => {
   }, [deviceInfo.isTouchDevice, setGlobalHoverProject, setGlobalThumbIndex]);
 
   const handleClick = useCallback(
-    async (slug: string | null) => {
+    (slug: string | null) => {
       if (deviceInfo.isTouchDevice) {
         setGlobalThumbIndex(itemIndex);
         setGlobalHoverProject(true);
+        setGlobalActiveProjectIndex(itemIndex);
 
         const isOnProjectPage = pathname.startsWith('/projects/');
 
         if (isOnProjectPage) {
           router.push(`/projects/${slug}`);
-          setTimeout(() => setGlobalShowMenu(false), 500);
+          setGlobalShowMenu(false);
         } else {
           setGlobalShowMenu(false);
-          setTimeout(() => router.push(`/projects/${slug}`), 400);
+
+          router.push(`/projects/${slug}`);
         }
       } else {
         setGlobalActiveProjectIndex(itemIndex);
@@ -100,7 +102,7 @@ const MenuItem = (props: Props) => {
         if (slug) {
           setGlobalScrollPosition();
 
-          await router.push(`/projects/${slug}`);
+          router.push(`/projects/${slug}`);
         }
       }
     },

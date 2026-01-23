@@ -6,7 +6,7 @@ import { AnimatePresence } from '../AnimatePresence/AnimatePrecence';
 import { useStore } from '@/store/store';
 import ProjectTitle from '@/components/ProjectTitle/ProjectTitle';
 import Menu from '../Menu/Menu';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 type Props = {
   projects: QueryProjectsResult | null;
@@ -19,6 +19,15 @@ const NavController = (props: Props) => {
     useStore((state) => state);
 
   const scrollPosRef = useRef<number | null>(null);
+  const [title, setTitle] = useState<string | null>(null);
+  const [year, setYear] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (projects?.[globalActiveProjectIndex]) {
+      setTitle(projects?.[globalActiveProjectIndex]?.title ?? null);
+      setYear(projects?.[globalActiveProjectIndex]?.year ?? null);
+    }
+  }, [globalActiveProjectIndex, projects]);
 
   useEffect(() => {
     scrollPosRef.current = globalScrollPosition;
@@ -53,8 +62,8 @@ const NavController = (props: Props) => {
       ) : (
         <ProjectTitle
           key="project-title"
-          title={projects?.[globalActiveProjectIndex]?.title ?? null}
-          year={projects?.[globalActiveProjectIndex]?.year ?? null}
+          title={title ?? null}
+          year={year ?? null}
         />
       )}
     </AnimatePresence>
