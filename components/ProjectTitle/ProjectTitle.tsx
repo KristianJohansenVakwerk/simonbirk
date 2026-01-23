@@ -51,7 +51,7 @@ const ProjectTitle = (props: Props) => {
   return (
     <motion.div
       className={
-        'relative mb-2 mt-[16px] grid cursor-pointer grid-cols-8 gap-1 pb-[100px] last:mb-0 lg:mt-0 lg:px-0 lg:px-1'
+        'relative mb-2 mt-[16px] grid cursor-pointer grid-cols-8 gap-1 pb-[30px] last:mb-0 lg:mt-0 lg:px-0 lg:px-1 lg:pb-[100px]'
       }
       key={title + (year ?? '')}
       initial={menuVariants.initial}

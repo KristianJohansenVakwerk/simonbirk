@@ -4,7 +4,7 @@ import Text from '@components/shared/ui/Text/Text';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { formatDate } from '@/utils/utils';
 import { useStore } from '@/store/store';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useDeviceDetection } from '@/utils/useDeviceDetection';
 
 type Props = {
@@ -20,7 +20,7 @@ const MenuItem = (props: Props) => {
   const heightRef = useRef<number | null>(null);
   const [height, setHeight] = useState(0);
   const router = useRouter();
-  const pathname = usePathname();
+
   const {
     setGlobalHoverProject,
     setGlobalThumbIndex,
@@ -79,39 +79,20 @@ const MenuItem = (props: Props) => {
 
   const handleClick = useCallback(
     (slug: string | null) => {
-      if (deviceInfo.isTouchDevice) {
-        setGlobalThumbIndex(itemIndex);
-        setGlobalHoverProject(true);
-
-        const isOnProjectPage = pathname.startsWith('/projects/');
-
-        if (isOnProjectPage) {
-          router.push(`/projects/${slug}`);
-          setGlobalShowMenu(false);
-        } else {
-          setGlobalShowMenu(false);
-
-          router.push(`/projects/${slug}`);
-        }
-      } else {
+      if (!deviceInfo.isTouchDevice) {
         setGlobalShowMenu(false);
+      }
+      if (slug) {
+        setGlobalScrollPosition();
 
-        if (slug) {
-          setGlobalScrollPosition();
-
-          router.push(`/projects/${slug}`);
-        }
+        router.push(`/projects/${slug}`);
       }
     },
     [
       deviceInfo.isTouchDevice,
-      setGlobalThumbIndex,
-      itemIndex,
-      setGlobalHoverProject,
       setGlobalShowMenu,
       router,
       setGlobalScrollPosition,
-      pathname,
     ],
   );
 
