@@ -27,9 +27,7 @@ const ThumbnailsProvider = (props: Props) => {
     const handleScroll = () => {
       // Check if we are the bottom of the page
       if (checkIfBottom()) {
-        timeoutRef.current = setTimeout(() => {
-          setLocalShowThumbs(true);
-        }, 1000);
+        setLocalShowThumbs(true);
       } else {
         clearTimer();
         setLocalShowThumbs(false);

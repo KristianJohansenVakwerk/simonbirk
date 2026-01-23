@@ -116,7 +116,7 @@ const MenuItem = (props: Props) => {
   return (
     <div
       ref={parentRef}
-      className="relativer group grid cursor-pointer grid-cols-8 flex-wrap gap-1 pb-2 lg:flex-row lg:pb-1"
+      className="relativer group grid cursor-pointer grid-cols-8 flex-wrap gap-1 pb-1 lg:flex-row"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={() => handleClick(item.slug?.current)}

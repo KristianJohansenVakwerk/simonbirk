@@ -33,8 +33,10 @@ const Intro = (props: Props) => {
       // Mark as animating to prevent multiple starts
       isAnimatingRef.current = true;
 
+      const initialDelay = 800;
+      const minDelay = 100;
       // Reset delay when starting
-      currentDelayRef.current = 1000;
+      currentDelayRef.current = initialDelay;
 
       const scheduleNext = () => {
         // Clear any existing timeout first
@@ -61,7 +63,7 @@ const Intro = (props: Props) => {
 
             currentDelayRef.current = Math.max(
               currentDelayRef.current * speedFactorRef.current,
-              200,
+              minDelay,
             );
 
             // Schedule next transition
@@ -88,7 +90,7 @@ const Intro = (props: Props) => {
     if (introDone) {
       setTimeout(() => {
         setGlobalIntroDone(true);
-      }, 500);
+      }, 300);
     }
   }, [introDone, setGlobalIntroDone]);
 

@@ -14,7 +14,7 @@ const SettingsItemsMobile = (props: Props) => {
   if (!settings) return;
 
   return (
-    <div className="fixed bottom-[8px] left-1 z-10 flex h-fit w-fit flex-col items-start gap-[6px] lg:hidden">
+    <div className="fixed bottom-[8px] right-1 z-10 flex h-fit w-[calc(50%-30px)] flex-col items-start gap-[6px] lg:hidden">
       <Link
         href={'/'}
         className={
