@@ -6,6 +6,7 @@ import CustomImage from '@/components/shared/ui/Image/Image';
 import { QueryProjectsResult } from '@/sanity/types/sanity.types';
 import ThumbnailsProvider from './ThumbnailsProvider';
 import { useStore } from '@/store/store';
+import { usePathname } from 'next/navigation';
 type Props = {
   data: QueryProjectsResult | null;
 };
@@ -18,24 +19,30 @@ const variants = {
     opacity: 0,
     transition: {
       duration: 0.5,
-      ease: 'easeInOut',
+      ease: [0.4, 0, 0.2, 1] as const, // easeInOut
     },
   },
   show: {
     opacity: 1,
     transition: {
       duration: 0.5,
-      ease: 'easeInOut',
+      ease: [0.4, 0, 0.2, 1] as const, // easeInOut
     },
   },
 };
 
 const Thumbnails = (props: Props) => {
   const { data } = props;
+  const pathname = usePathname();
 
   const { globalStartThumbs, globalThumbIndex, globalHoverProject } = useStore(
     (state) => state,
   );
+
+  // Hide thumbnails on project detail pages
+  if (pathname.startsWith('/projects/')) {
+    return null;
+  }
 
   return (
     <ThumbnailsProvider dataLen={data?.length}>
@@ -88,9 +95,7 @@ const Thumb = (props: ThumbProps) => {
     >
       <CustomImage
         asset={image}
-        className={clsx(
-          'object-center-center h-full w-auto object-contain ',
-        )}
+        className={clsx('object-center-center h-full w-auto object-contain')}
       />
     </motion.div>
   );

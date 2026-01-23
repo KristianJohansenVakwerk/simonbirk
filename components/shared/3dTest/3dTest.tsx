@@ -19,14 +19,14 @@ const ThreeDTest = (props: Props) => {
   const {
     globalProjectOrder,
     resetGlobalScrollPosition,
-    setGlobalActiveProjectIndex,
     setGlobalActiveProjectMediaLen,
     setGlobalActiveProjectCurrentIndex,
+    globalShowMenu,
   } = useStore((state) => state);
 
   const [cursorClass, setCursorClass] = useState<
-    'cursor-n-resize' | 'cursor-s-resize'
-  >('cursor-n-resize');
+    'cursor-w-resize' | 'cursor-e-resize'
+  >('cursor-w-resize');
   const containerRef = useRef<HTMLDivElement>(null);
   const initialRef = useRef<boolean>(true);
 
@@ -102,19 +102,19 @@ const ThreeDTest = (props: Props) => {
 
   useEffect(() => {
     const handleMousemove = (event: MouseEvent) => {
-      const { y, whhalf } = getClientY(event);
+      const { x, wwhalf } = getClientY(event);
 
-      if (y <= whhalf) {
-        setCursorClass('cursor-n-resize');
+      if (x >= wwhalf) {
+        setCursorClass('cursor-e-resize');
         // Safari fallback: set cursor on document.body
         if (typeof document !== 'undefined') {
-          document.body.style.cursor = 'n-resize';
+          document.body.style.cursor = 'e-resize';
         }
       } else {
-        setCursorClass('cursor-s-resize');
+        setCursorClass('cursor-w-resize');
         // Safari fallback: set cursor on document.body
         if (typeof document !== 'undefined') {
-          document.body.style.cursor = 's-resize';
+          document.body.style.cursor = 'w-resize';
         }
       }
     };
@@ -123,11 +123,22 @@ const ThreeDTest = (props: Props) => {
       const key = event.key;
 
       switch (key) {
-        case 'ArrowUp':
+        // case 'ArrowUp':
+        //   setActiveIndex((prev) => ++prev);
+        //   break;
+
+        // case 'ArrowDown':
+        //   setActiveIndex((prev) => {
+        //     if (prev === 0) return 0;
+        //     return --prev;
+        //   });
+        //   break;
+
+        case 'ArrowRight':
           setActiveIndex((prev) => ++prev);
           break;
 
-        case 'ArrowDown':
+        case 'ArrowLeft':
           setActiveIndex((prev) => {
             if (prev === 0) return 0;
             return --prev;
@@ -151,9 +162,9 @@ const ThreeDTest = (props: Props) => {
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (!combinedMedia.length) return;
-    const { y, whhalf } = getClientY(event);
+    const { x, wwhalf } = getClientY(event);
 
-    if (y <= whhalf) {
+    if (x >= wwhalf) {
       setActiveIndex((prev) => ++prev);
     } else {
       setActiveIndex((prev) => {
@@ -161,6 +172,14 @@ const ThreeDTest = (props: Props) => {
         return --prev;
       });
     }
+    // if (y <= whhalf) {
+    //   setActiveIndex((prev) => ++prev);
+    // } else {
+    //   setActiveIndex((prev) => {
+    //     if (prev === 0) return 0;
+    //     return --prev;
+    //   });
+    // }
   };
 
   useEffect(() => {
@@ -168,8 +187,6 @@ const ThreeDTest = (props: Props) => {
 
     setGlobalActiveProjectCurrentIndex(activeIndex + 1);
 
-    const slugValue = typeof data?.slug === 'string' ? data.slug : '';
-    const projectIndex = slugValue ? globalProjectOrder.indexOf(slugValue) : -1;
     const nextSlug = data.nextProject?.slug?.current;
     const currentMediaLength = data?.media?.length || 0;
 
@@ -177,7 +194,6 @@ const ThreeDTest = (props: Props) => {
       if (nextSlug) {
         setTimeout(() => {
           router.push(`/projects/${nextSlug}`);
-          setGlobalActiveProjectIndex(projectIndex + 1);
         }, 300);
       } else {
         resetGlobalScrollPosition();
@@ -190,7 +206,7 @@ const ThreeDTest = (props: Props) => {
     data,
     globalProjectOrder,
     router,
-    setGlobalActiveProjectIndex,
+
     setGlobalActiveProjectCurrentIndex,
     resetGlobalScrollPosition,
   ]);
@@ -232,8 +248,12 @@ const ThreeDTest = (props: Props) => {
     <Box
       ref={containerRef}
       className={clsx(
-        'fixed left-0 top-0 flex h-full w-full select-none flex-col overflow-hidden outline-none',
+        'duration-400 fixed left-0 top-0 flex h-full w-full select-none flex-col overflow-hidden outline-none transition-opacity ease-in-out',
         cursorClass,
+        { 'pointer-events-none': globalShowMenu },
+        { 'pointer-events-auto': !globalShowMenu },
+        { 'opacity-0 lg:opacity-100': globalShowMenu },
+        { 'opacity-100': !globalShowMenu },
       )}
       style={{
         perspective: '2000px', // Increased perspective for stronger effect
@@ -280,8 +300,11 @@ export default ThreeDTest;
 
 const getClientY = (event: React.MouseEvent<HTMLDivElement> | MouseEvent) => {
   const wh = window.innerHeight;
+  const ww = window.innerWidth;
   const whhalf = (wh / 3) * 2;
+  const wwhalf = ww / 2;
   const y = event.clientY;
+  const x = event.clientX;
 
-  return { y, whhalf };
+  return { y, whhalf, x, wwhalf };
 };

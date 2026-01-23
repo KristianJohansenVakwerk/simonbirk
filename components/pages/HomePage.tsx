@@ -1,6 +1,6 @@
 import { sanityFetch } from '@/sanity/lib/live';
 import { queryProjects } from '@/sanity/lib/queries';
-import { getRandomProjects } from '@/utils/utils';
+
 import Intro from '../globals/Intro/Intro';
 import Thumbnails from '../globals/Thumbnails/Thumbnails';
 
@@ -9,11 +9,9 @@ const Homepage = async () => {
     sanityFetch({ query: queryProjects }),
   ]);
 
-  const randomProjects = getRandomProjects(projects, 10);
-
   return (
     <>
-      <Intro projects={randomProjects} />
+      <Intro data={projects} />
       <Thumbnails data={projects} />
     </>
   );

@@ -25,7 +25,6 @@ const MenuItem = (props: Props) => {
     setGlobalHoverProject,
     setGlobalThumbIndex,
     setGlobalShowMenu,
-    setGlobalActiveProjectIndex,
     setGlobalScrollPosition,
   } = useStore((state) => state);
 
@@ -79,36 +78,20 @@ const MenuItem = (props: Props) => {
   }, [deviceInfo.isTouchDevice, setGlobalHoverProject, setGlobalThumbIndex]);
 
   const handleClick = useCallback(
-    async (slug: string | null) => {
-      if (deviceInfo.isTouchDevice) {
-        setGlobalThumbIndex(itemIndex);
-        setGlobalHoverProject(true);
-        router.prefetch(`/projects/${item.slug?.current}`);
-
-        setTimeout(async () => {
-          setGlobalShowMenu(false);
-          await router.push(`/projects/${slug}`);
-        }, 100);
-      } else {
-        setGlobalActiveProjectIndex(itemIndex);
+    (slug: string | null) => {
+      if (!deviceInfo.isTouchDevice) {
         setGlobalShowMenu(false);
+      }
+      if (slug) {
+        setGlobalScrollPosition();
 
-        if (slug) {
-          setGlobalScrollPosition();
-
-          await router.push(`/projects/${slug}`);
-        }
+        router.push(`/projects/${slug}`);
       }
     },
     [
       deviceInfo.isTouchDevice,
-      setGlobalThumbIndex,
-      itemIndex,
-      setGlobalHoverProject,
-      router,
-      item.slug,
       setGlobalShowMenu,
-      setGlobalActiveProjectIndex,
+      router,
       setGlobalScrollPosition,
     ],
   );
@@ -116,7 +99,7 @@ const MenuItem = (props: Props) => {
   return (
     <div
       ref={parentRef}
-      className="relativer group grid cursor-pointer grid-cols-8 flex-wrap gap-1 pb-2 lg:flex-row lg:pb-1"
+      className="relativer group grid cursor-pointer grid-cols-8 flex-wrap gap-1 pb-1 lg:flex-row"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={() => handleClick(item.slug?.current)}

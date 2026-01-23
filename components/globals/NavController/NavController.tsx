@@ -15,10 +15,11 @@ type Props = {
 const NavController = (props: Props) => {
   const { projects } = props;
 
-  const { globalShowMenu, globalActiveProjectIndex, globalScrollPosition } =
-    useStore((state) => state);
+  const { globalShowMenu, globalScrollPosition } = useStore((state) => state);
 
   const scrollPosRef = useRef<number | null>(null);
+
+  useEffect(() => {}, []);
 
   useEffect(() => {
     scrollPosRef.current = globalScrollPosition;
@@ -53,8 +54,7 @@ const NavController = (props: Props) => {
       ) : (
         <ProjectTitle
           key="project-title"
-          title={projects?.[globalActiveProjectIndex]?.title ?? null}
-          year={projects?.[globalActiveProjectIndex]?.year ?? null}
+          data={projects ?? []}
         />
       )}
     </AnimatePresence>
