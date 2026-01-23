@@ -11,8 +11,6 @@ interface StoreState {
   setGlobalIntroPlayed: (done: boolean) => void;
   globalShowMenu: boolean;
   setGlobalShowMenu: (show: boolean) => void;
-  globalActiveProjectIndex: number;
-  setGlobalActiveProjectIndex: (index: number) => void;
   globalActiveProjectMediaLen: number;
   setGlobalActiveProjectMediaLen: (len: number) => void;
   globalActiveProjectCurrentIndex: number;
@@ -30,7 +28,7 @@ interface StoreState {
   setGlobalProjectOrder: (projects: QueryProjectsResult) => void;
 }
 
-export const useStore = create<StoreState>((set, get) => ({
+export const useStore = create<StoreState>((set) => ({
   globalIntroDone: false,
   setGlobalIntroDone: (done: boolean) => set({ globalIntroDone: done }),
   globalIntroPlayed: false,
@@ -39,9 +37,6 @@ export const useStore = create<StoreState>((set, get) => ({
   setGlobalShowMenu: (show: boolean) => set({ globalShowMenu: show }),
   globalStartThumbs: false,
   setGlobalStartThumbs: (state: boolean) => set({ globalStartThumbs: state }),
-  globalActiveProjectIndex: 0,
-  setGlobalActiveProjectIndex: (index: number) =>
-    set({ globalActiveProjectIndex: index }),
   globalActiveProjectMediaLen: 0,
   setGlobalActiveProjectMediaLen: (len: number) =>
     set({ globalActiveProjectMediaLen: len }),

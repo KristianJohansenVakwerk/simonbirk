@@ -25,7 +25,6 @@ const MenuItem = (props: Props) => {
     setGlobalHoverProject,
     setGlobalThumbIndex,
     setGlobalShowMenu,
-    setGlobalActiveProjectIndex,
     setGlobalScrollPosition,
   } = useStore((state) => state);
 
@@ -83,7 +82,6 @@ const MenuItem = (props: Props) => {
       if (deviceInfo.isTouchDevice) {
         setGlobalThumbIndex(itemIndex);
         setGlobalHoverProject(true);
-        setGlobalActiveProjectIndex(itemIndex);
 
         const isOnProjectPage = pathname.startsWith('/projects/');
 
@@ -96,7 +94,6 @@ const MenuItem = (props: Props) => {
           router.push(`/projects/${slug}`);
         }
       } else {
-        setGlobalActiveProjectIndex(itemIndex);
         setGlobalShowMenu(false);
 
         if (slug) {
@@ -113,7 +110,6 @@ const MenuItem = (props: Props) => {
       setGlobalHoverProject,
       setGlobalShowMenu,
       router,
-      setGlobalActiveProjectIndex,
       setGlobalScrollPosition,
       pathname,
     ],

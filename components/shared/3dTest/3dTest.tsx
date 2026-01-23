@@ -19,7 +19,6 @@ const ThreeDTest = (props: Props) => {
   const {
     globalProjectOrder,
     resetGlobalScrollPosition,
-    setGlobalActiveProjectIndex,
     setGlobalActiveProjectMediaLen,
     setGlobalActiveProjectCurrentIndex,
     globalShowMenu,
@@ -188,8 +187,6 @@ const ThreeDTest = (props: Props) => {
 
     setGlobalActiveProjectCurrentIndex(activeIndex + 1);
 
-    const slugValue = typeof data?.slug === 'string' ? data.slug : '';
-    const projectIndex = slugValue ? globalProjectOrder.indexOf(slugValue) : -1;
     const nextSlug = data.nextProject?.slug?.current;
     const currentMediaLength = data?.media?.length || 0;
 
@@ -197,7 +194,6 @@ const ThreeDTest = (props: Props) => {
       if (nextSlug) {
         setTimeout(() => {
           router.push(`/projects/${nextSlug}`);
-          setGlobalActiveProjectIndex(projectIndex + 1);
         }, 300);
       } else {
         resetGlobalScrollPosition();
@@ -210,7 +206,7 @@ const ThreeDTest = (props: Props) => {
     data,
     globalProjectOrder,
     router,
-    setGlobalActiveProjectIndex,
+
     setGlobalActiveProjectCurrentIndex,
     resetGlobalScrollPosition,
   ]);
