@@ -83,12 +83,8 @@ const MenuItem = (props: Props) => {
       if (deviceInfo.isTouchDevice) {
         setGlobalThumbIndex(itemIndex);
         setGlobalHoverProject(true);
-        router.prefetch(`/projects/${item.slug?.current}`);
 
-        setTimeout(async () => {
-          setGlobalShowMenu(false);
-          await router.push(`/projects/${slug}`);
-        }, 100);
+        await router.push(`/projects/${slug}`);
       } else {
         setGlobalActiveProjectIndex(itemIndex);
         setGlobalShowMenu(false);
@@ -105,9 +101,8 @@ const MenuItem = (props: Props) => {
       setGlobalThumbIndex,
       itemIndex,
       setGlobalHoverProject,
-      router,
-      item.slug,
       setGlobalShowMenu,
+      router,
       setGlobalActiveProjectIndex,
       setGlobalScrollPosition,
     ],
