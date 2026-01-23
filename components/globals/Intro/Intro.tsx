@@ -7,9 +7,11 @@ import { motion } from 'motion/react';
 import { useStore } from '@/store/store';
 import clsx from 'clsx';
 import { introVariants } from '@/utils/animationUtils';
-type Props = { projects: QueryProjectsResult | null };
+import { getRandomProjects } from '@/utils/utils';
+type Props = { data: QueryProjectsResult | null };
 const Intro = (props: Props) => {
-  const { projects } = props;
+  const { data } = props;
+  const [projects, setProjects] = useState<QueryProjectsResult | null>(null);
 
   const { globalIntroDone, setGlobalIntroDone } = useStore((state) => state);
 
@@ -18,6 +20,11 @@ const Intro = (props: Props) => {
   const [introDone, setIntroDone] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const isAnimatingRef = useRef<boolean>(false); // Guard flag to prevent multiple starts
+
+  useEffect(() => {
+    const randomProjects = getRandomProjects(data, 10) || [];
+    setProjects(randomProjects);
+  }, [data]);
 
   const handleLoadDone = useCallback(() => {
     setLoadedCount((prev) => ++prev);
