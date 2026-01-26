@@ -26,10 +26,6 @@ const ProjectTitle = (props: Props) => {
   const [year, setYear] = useState<string | null>(null);
 
   useEffect(() => {
-    console.log(
-      'globalProjectOrder',
-      globalProjectOrder.findIndex((p) => p === params.slug),
-    );
     const projectIndex = globalProjectOrder.findIndex((p) => p === params.slug);
 
     if (projectIndex !== -1) {

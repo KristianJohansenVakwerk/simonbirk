@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import Box from '@components/shared/ui/Box/Box';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { QueryProjectBySlugResult } from '@/sanity/types/sanity.types';
 import CustomImage from '@components/shared/ui/Image/Image';
 import { useStore } from '@/store/store';
@@ -16,6 +16,7 @@ type Props = {
 const ThreeDTest = (props: Props) => {
   const { data } = props;
   const router = useRouter();
+  const pathname = usePathname();
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const {
     globalProjectOrder,
@@ -32,6 +33,7 @@ const ThreeDTest = (props: Props) => {
   >('cursor-w-resize');
   const containerRef = useRef<HTMLDivElement>(null);
   const initialRef = useRef<boolean>(true);
+  const currenMediaLengthRef = useRef<number>(0);
 
   // Combine current media with next project's first image
   const combinedMedia = useMemo(
@@ -45,7 +47,7 @@ const ThreeDTest = (props: Props) => {
   const isTouchDevice = deviceInfo.isTouchDevice || deviceInfo.isMobile;
 
   const zMultiplier = isTouchDevice ? -100 : -8000;
-  console.log('isTouchDevice', zMultiplier);
+
   const [scales, setScales] = useState<
     {
       show: boolean;
@@ -61,6 +63,21 @@ const ThreeDTest = (props: Props) => {
       opacity: index === 0 ? 1 : 0,
     })),
   );
+
+  useEffect(() => {
+    setActiveIndex(0);
+    initialRef.current = true;
+  }, [pathname]);
+
+  useEffect(() => {
+    if (combinedMedia?.length) {
+      currenMediaLengthRef.current = combinedMedia?.length || 0;
+    }
+  }, [combinedMedia?.length]);
+
+  const isAtNavigationBoundary = useMemo(() => {
+    return activeIndex === currenMediaLengthRef.current - 1;
+  }, [activeIndex]);
 
   useEffect(() => {
     if (initialRef.current) return;
@@ -132,18 +149,8 @@ const ThreeDTest = (props: Props) => {
       const key = event.key;
 
       switch (key) {
-        // case 'ArrowUp':
-        //   setActiveIndex((prev) => ++prev);
-        //   break;
-
-        // case 'ArrowDown':
-        //   setActiveIndex((prev) => {
-        //     if (prev === 0) return 0;
-        //     return --prev;
-        //   });
-        //   break;
-
         case 'ArrowRight':
+          if (isAtNavigationBoundary) return;
           setActiveIndex((prev) => ++prev);
           break;
 
@@ -171,13 +178,14 @@ const ThreeDTest = (props: Props) => {
         document.body.style.cursor = '';
       }
     };
-  }, []);
+  }, [deviceInfo.isMobile, deviceInfo.isTouchDevice, isAtNavigationBoundary]);
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (!combinedMedia.length) return;
     const { x, wwhalf } = getClientY(event);
 
     if (x >= wwhalf) {
+      if (isAtNavigationBoundary) return;
       setActiveIndex((prev) => ++prev);
     } else {
       setActiveIndex((prev) => {
@@ -185,14 +193,6 @@ const ThreeDTest = (props: Props) => {
         return --prev;
       });
     }
-    // if (y <= whhalf) {
-    //   setActiveIndex((prev) => ++prev);
-    // } else {
-    //   setActiveIndex((prev) => {
-    //     if (prev === 0) return 0;
-    //     return --prev;
-    //   });
-    // }
   };
 
   useEffect(() => {
