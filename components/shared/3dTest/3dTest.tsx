@@ -124,6 +124,97 @@ const ThreeDTest = (props: Props) => {
     setGlobalActiveProjectMediaLen(data.media.length);
   }, [data?.media?.length, setGlobalActiveProjectMediaLen]);
 
+  // Swipe gesture tracking refs
+  const touchStartX = useRef<number | null>(null);
+  const touchStartY = useRef<number | null>(null);
+  const touchStartTime = useRef<number | null>(null);
+  const minSwipeDistance = 50; // Minimum distance in pixels for a valid swipe
+  const maxVerticalSwipeDistance = 100; // Maximum vertical movement to consider it a horizontal swipe
+
+  // Swipe gesture handling for mobile
+  useEffect(() => {
+    if (!isTouchDevice || !containerRef.current) return;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      touchStartX.current = touch.clientX;
+      touchStartY.current = touch.clientY;
+      touchStartTime.current = Date.now();
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      // Prevent default scrolling behavior during horizontal swipes
+      if (touchStartX.current !== null && touchStartY.current !== null) {
+        const touch = e.touches[0];
+        const deltaX = Math.abs(touch.clientX - touchStartX.current);
+        const deltaY = Math.abs(touch.clientY - touchStartY.current);
+
+        // If horizontal movement is greater than vertical, prevent scrolling
+        if (deltaX > deltaY && deltaX > 10) {
+          e.preventDefault();
+        }
+      }
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (
+        touchStartX.current === null ||
+        touchStartY.current === null ||
+        touchStartTime.current === null
+      ) {
+        return;
+      }
+
+      const touch = e.changedTouches[0];
+      const deltaX = touch.clientX - touchStartX.current;
+      const deltaY = touch.clientY - touchStartY.current;
+      // const deltaTime = Date.now() - touchStartTime.current;
+      const absDeltaX = Math.abs(deltaX);
+      const absDeltaY = Math.abs(deltaY);
+
+      // Check if it's a horizontal swipe (more horizontal than vertical movement)
+      if (
+        absDeltaX > absDeltaY &&
+        absDeltaX > minSwipeDistance &&
+        absDeltaY < maxVerticalSwipeDistance
+      ) {
+        // Swipe left (negative deltaX) = navigate forward
+        if (deltaX < 0) {
+          // Swipe left = forward
+          if (!isAtNavigationBoundary) {
+            setActiveIndex((prev) => ++prev);
+          }
+        } else {
+          // Swipe right (positive deltaX) = navigate backward
+          setActiveIndex((prev) => {
+            if (prev === 0) return 0;
+            return --prev;
+          });
+        }
+      }
+
+      // Reset touch tracking
+      touchStartX.current = null;
+      touchStartY.current = null;
+      touchStartTime.current = null;
+    };
+
+    const container = containerRef.current;
+    container.addEventListener('touchstart', handleTouchStart, {
+      passive: false,
+    });
+    container.addEventListener('touchmove', handleTouchMove, {
+      passive: false,
+    });
+    container.addEventListener('touchend', handleTouchEnd, { passive: true });
+
+    return () => {
+      container.removeEventListener('touchstart', handleTouchStart);
+      container.removeEventListener('touchmove', handleTouchMove);
+      container.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [isTouchDevice, isAtNavigationBoundary]);
+
   useEffect(() => {
     const isTouchDevice = deviceInfo.isTouchDevice || deviceInfo.isMobile;
 
