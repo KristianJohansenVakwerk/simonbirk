@@ -35,6 +35,10 @@ const ThreeDTest = (props: Props) => {
   const initialRef = useRef<boolean>(true);
   const currenMediaLengthRef = useRef<number>(0);
 
+  // Swipe preview state
+  const [swipeProgress, setSwipeProgress] = useState<number>(0); // -1 to 1, negative = forward, positive = backward
+  const [isSwiping, setIsSwiping] = useState<boolean>(false);
+
   // Combine current media with next project's first image
   const combinedMedia = useMemo(
     () => [
@@ -67,6 +71,8 @@ const ThreeDTest = (props: Props) => {
   useEffect(() => {
     setActiveIndex(0);
     initialRef.current = true;
+    setSwipeProgress(0);
+    setIsSwiping(false);
   }, [pathname]);
 
   useEffect(() => {
@@ -131,7 +137,7 @@ const ThreeDTest = (props: Props) => {
   const minSwipeDistance = 50; // Minimum distance in pixels for a valid swipe
   const maxVerticalSwipeDistance = 100; // Maximum vertical movement to consider it a horizontal swipe
 
-  // Swipe gesture handling for mobile
+  // Swipe gesture handling for mobile with preview animation
   useEffect(() => {
     if (!isTouchDevice || !containerRef.current) return;
 
@@ -140,18 +146,40 @@ const ThreeDTest = (props: Props) => {
       touchStartX.current = touch.clientX;
       touchStartY.current = touch.clientY;
       touchStartTime.current = Date.now();
+      setIsSwiping(false);
+      setSwipeProgress(0);
     };
 
     const handleTouchMove = (e: TouchEvent) => {
-      // Prevent default scrolling behavior during horizontal swipes
-      if (touchStartX.current !== null && touchStartY.current !== null) {
-        const touch = e.touches[0];
-        const deltaX = Math.abs(touch.clientX - touchStartX.current);
-        const deltaY = Math.abs(touch.clientY - touchStartY.current);
+      if (touchStartX.current === null || touchStartY.current === null) return;
 
-        // If horizontal movement is greater than vertical, prevent scrolling
-        if (deltaX > deltaY && deltaX > 10) {
-          e.preventDefault();
+      const touch = e.touches[0];
+      const deltaX = touch.clientX - touchStartX.current;
+      const deltaY = touch.clientY - touchStartY.current;
+      const absDeltaX = Math.abs(deltaX);
+      const absDeltaY = Math.abs(deltaY);
+
+      // Check if it's a horizontal swipe (more horizontal than vertical movement)
+      if (absDeltaX > absDeltaY && absDeltaX > 10) {
+        e.preventDefault();
+        setIsSwiping(true);
+
+        const windowWidth =
+          typeof window !== 'undefined' ? window.innerWidth : 1;
+        // Calculate progress: -1 (full forward) to 1 (full backward)
+        // Clamp to reasonable range
+        const maxSwipeDistance = windowWidth * 0.5; // 50% of screen width
+        const progress = Math.max(-1, Math.min(1, deltaX / maxSwipeDistance));
+
+        // Only show preview if above threshold
+        if (
+          absDeltaX > minSwipeDistance &&
+          absDeltaY < maxVerticalSwipeDistance
+        ) {
+          setSwipeProgress(progress);
+        } else {
+          // Below threshold, show minimal preview (30% of movement)
+          setSwipeProgress(progress * 0.3);
         }
       }
     };
@@ -168,9 +196,12 @@ const ThreeDTest = (props: Props) => {
       const touch = e.changedTouches[0];
       const deltaX = touch.clientX - touchStartX.current;
       const deltaY = touch.clientY - touchStartY.current;
-      // const deltaTime = Date.now() - touchStartTime.current;
       const absDeltaX = Math.abs(deltaX);
       const absDeltaY = Math.abs(deltaY);
+
+      // Reset swipe preview
+      setIsSwiping(false);
+      setSwipeProgress(0);
 
       // Check if it's a horizontal swipe (more horizontal than vertical movement)
       if (
@@ -207,13 +238,22 @@ const ThreeDTest = (props: Props) => {
       passive: false,
     });
     container.addEventListener('touchend', handleTouchEnd, { passive: true });
+    container.addEventListener('touchcancel', handleTouchEnd, {
+      passive: true,
+    });
 
     return () => {
       container.removeEventListener('touchstart', handleTouchStart);
       container.removeEventListener('touchmove', handleTouchMove);
       container.removeEventListener('touchend', handleTouchEnd);
+      container.removeEventListener('touchcancel', handleTouchEnd);
     };
-  }, [isTouchDevice, isAtNavigationBoundary]);
+  }, [
+    isTouchDevice,
+    isAtNavigationBoundary,
+    minSwipeDistance,
+    maxVerticalSwipeDistance,
+  ]);
 
   useEffect(() => {
     const isTouchDevice = deviceInfo.isTouchDevice || deviceInfo.isMobile;
@@ -315,6 +355,34 @@ const ThreeDTest = (props: Props) => {
     resetGlobalScrollPosition,
   ]);
 
+  // Calculate scale, z, and opacity during swipe using the same formulas as the original animation
+  const getSwipeValues = (index: number) => {
+    if (!isSwiping || swipeProgress === 0) {
+      return {
+        scale: scales[index]?.scale ?? 1,
+        z: scales[index]?.z ?? 0,
+        opacity: scales[index]?.opacity ?? 0,
+        show: scales[index]?.show ?? false,
+      };
+    }
+
+    // Calculate virtual activeIndex based on swipe progress
+    // swipeProgress: -1 (forward) to 1 (backward)
+    const virtualActiveIndex = activeIndex - swipeProgress; // Negative progress moves forward
+
+    // Use the same formulas as the original animation
+    const relativeIndex = index - virtualActiveIndex;
+    const scale = relativeIndex === 0 ? 1 : 0.1 ** relativeIndex;
+    const z = relativeIndex * zMultiplier;
+    const calculatedOpacity = relativeIndex === 0 ? 1 : 0.1 ** relativeIndex;
+    const opacity = calculatedOpacity > 0 ? 1 : 0;
+    const show =
+      index >= Math.floor(virtualActiveIndex) &&
+      index < Math.floor(virtualActiveIndex) + 2;
+
+    return { scale, z, opacity, show };
+  };
+
   // Dynamic loading strategy for Safari compatibility
   const getLoadingProps = (index: number) => {
     // First 3 images: priority (blocks render, loads immediately)
@@ -350,7 +418,7 @@ const ThreeDTest = (props: Props) => {
   //   return () => {
   //     imagesToPreload.forEach((img: any) => {
   //       img.src = '';
-  //     }
+  //     });
 
   //   }
   // }, [activeIndex, combinedMedia]);
@@ -374,6 +442,15 @@ const ThreeDTest = (props: Props) => {
       onClick={handleClick}
     >
       {combinedMedia.map((item, index) => {
+        const swipeValues = getSwipeValues(index);
+        const currentZ = isSwiping ? swipeValues.z : (scales[index]?.z ?? 0);
+        const currentOpacity = isSwiping
+          ? swipeValues.opacity
+          : (scales[index]?.opacity ?? 0);
+        const shouldShow = isSwiping
+          ? swipeValues.show
+          : (scales[index]?.show ?? false);
+
         return (
           <Box
             key={index}
@@ -388,10 +465,10 @@ const ThreeDTest = (props: Props) => {
               width: '100%',
               height: '100%',
               zIndex: combinedMedia.length - index,
-              opacity: scales[index]?.opacity ?? 0,
-              transform: `translate(-50%, -50%) translate3d(0, 0, ${scales[index].z}px)`,
-              transition: `all .3s ease-in-out`,
-              willChange: scales[index]?.opacity > 0 ? 'transform' : 'auto',
+              opacity: shouldShow ? currentOpacity : 0,
+              transform: `translate(-50%, -50%) translate3d(0, 0, ${currentZ}px)`,
+              transition: isSwiping ? 'none' : 'all .3s ease-in-out',
+              willChange: shouldShow || isSwiping ? 'transform' : 'auto',
             }}
           >
             <CustomImage
