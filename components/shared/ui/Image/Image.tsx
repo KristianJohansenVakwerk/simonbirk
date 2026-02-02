@@ -51,6 +51,7 @@ const CustomImage = (props: Props) => {
         sizes={sizes}
         quality={75}
         onLoad={() => (loadDone ? loadDone() : null)}
+        onError={() => (loadDone ? loadDone() : null)}
       />
     );
   } else {

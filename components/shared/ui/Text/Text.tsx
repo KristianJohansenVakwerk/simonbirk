@@ -1,22 +1,22 @@
-import clsx from "clsx";
-import Box from "../Box/Box";
-import { getTextSize } from "./TextUtils";
+import clsx from 'clsx';
+import Box from '../Box/Box';
+import { getTextSize } from './TextUtils';
 
 type Props = {
   children: React.ReactNode;
   className?: string;
   debug?: boolean;
   as?: string;
-  size?: "base" | "xl";
+  size?: 'base' | 'xl';
   ref?: React.RefObject<HTMLElement | null>;
 };
 const Text = (props: Props) => {
   const {
     children,
     className,
-    size = "base",
+    size = 'base',
     debug = false,
-    as = "p",
+    as = 'p',
     ref,
   } = props;
 
@@ -24,7 +24,7 @@ const Text = (props: Props) => {
     <Box
       ref={ref}
       className={clsx([
-        `font-sans leading-none capsize gap-0`,
+        `gap-0 font-sans leading-none capsize`,
         getTextSize(size),
         className,
       ])}
