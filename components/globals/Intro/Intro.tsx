@@ -27,14 +27,15 @@ const Intro = (props: Props) => {
     setProjects(randomProjects);
   }, [data]);
 
-  // Fallback: start animation after max wait so intro never freezes (e.g. slow/failed image loads)
-  const INTRO_MAX_WAIT_MS = 6000;
+  // Fallback: start animation after short wait so intro never freezes on cold load (new tab)
+  // Cached images often don't fire onLoad, so we don't wait long.
+  const INTRO_MAX_WAIT_MS = 2000;
   useEffect(() => {
     if (!projects?.length) return;
     fallbackTimeoutRef.current = setTimeout(() => {
       setLoadedCount((prev) => {
         if (prev < projects.length && !isAnimatingRef.current) {
-          return projects.length; // Force "all loaded" so animation starts and intro never freezes
+          return projects.length; // Force "all loaded" so animation starts
         }
         return prev;
       });
