@@ -35,6 +35,20 @@ export default async function RootLayout({
     <>
       <head>
         <Favicon />
+        <meta
+          name="theme-color"
+          content="#ffffff"
+          media="(prefers-color-scheme: light)"
+        />
+        <meta
+          name="theme-color"
+          content="#181716"
+          media="(prefers-color-scheme: dark)"
+        />
+        <meta
+          name="apple-mobile-web-app-status-bar-style"
+          content="black-translucent"
+        />
       </head>
       <StoreInitializer />
 
