@@ -20,33 +20,11 @@ const Intro = (props: Props) => {
   const [introDone, setIntroDone] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const isAnimatingRef = useRef<boolean>(false); // Guard flag to prevent multiple starts
-  const fallbackTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const randomProjects = getRandomProjects(data, 10) || [];
     setProjects(randomProjects);
   }, [data]);
-
-  // Fallback: start animation after short wait so intro never freezes on cold load (new tab)
-  // Cached images often don't fire onLoad, so we don't wait long.
-  const INTRO_MAX_WAIT_MS = 2000;
-  useEffect(() => {
-    if (!projects?.length) return;
-    fallbackTimeoutRef.current = setTimeout(() => {
-      setLoadedCount((prev) => {
-        if (prev < projects.length && !isAnimatingRef.current) {
-          return projects.length; // Force "all loaded" so animation starts
-        }
-        return prev;
-      });
-    }, INTRO_MAX_WAIT_MS);
-    return () => {
-      if (fallbackTimeoutRef.current) {
-        clearTimeout(fallbackTimeoutRef.current);
-        fallbackTimeoutRef.current = null;
-      }
-    };
-  }, [projects?.length]);
 
   const handleLoadDone = useCallback(() => {
     setLoadedCount((prev) => ++prev);
