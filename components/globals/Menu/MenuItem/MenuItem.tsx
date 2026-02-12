@@ -125,7 +125,7 @@ const MenuItem = (props: Props) => {
                 top: TOP_MARGIN + itemIndex * SPACING,
               }}
             >
-              <Text className="hidden transition-colors duration-300 ease-in-out lg:block lg:group-hover:text-hover">
+              <Text className="hidden min-w-[28px] transition-colors duration-300 ease-in-out lg:block lg:group-hover:text-hover">
                 {formatDate(item.year, 'yyyy')}
               </Text>
               <Text
