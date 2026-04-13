@@ -2,7 +2,7 @@ import './globals.css';
 import Favicon from '@/components/globals/Favicon/Favicon';
 import { HeaderServer } from '@/components/globals/Header/HeaderServer';
 import { draftMode } from 'next/headers';
-import { VisualEditing } from 'next-sanity/visual-editing';
+import { VisualEditing } from 'next-sanity';
 import { sanityFetch, SanityLive } from '@/sanity/lib/live';
 import { handleError } from './client-utils';
 import { DisableDraftMode } from '@/components/globals/DisableDraftMode/DisableDraftMode';

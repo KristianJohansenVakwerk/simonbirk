@@ -18,7 +18,6 @@ const ThreeDTest = (props: Props) => {
   const router = useRouter();
   const pathname = usePathname();
   const [activeIndex, setActiveIndex] = useState<number>(0);
-  const [canBeNavigated, setCanBeNavigated] = useState<boolean>(false);
   const {
     globalProjectOrder,
     resetGlobalScrollPosition,
@@ -68,24 +67,6 @@ const ThreeDTest = (props: Props) => {
       opacity: index === 0 ? 1 : 0,
     })),
   );
-
-  useEffect(() => {
-    const onLoad = () => {
-      setTimeout(() => {
-        setCanBeNavigated(true);
-      }, 1000);
-    };
-
-    if (document.readyState === 'complete') {
-      onLoad();
-    } else {
-      window.addEventListener('load', onLoad);
-    }
-
-    return () => {
-      window.removeEventListener('load', onLoad);
-    };
-  }, []);
 
   useEffect(() => {
     setActiveIndex(0);
@@ -331,7 +312,7 @@ const ThreeDTest = (props: Props) => {
   }, [deviceInfo.isMobile, deviceInfo.isTouchDevice, isAtNavigationBoundary]);
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (!combinedMedia.length || !canBeNavigated) return;
+    if (!combinedMedia.length) return;
     const { x, wwhalf } = getClientY(event);
 
     if (x >= wwhalf) {
@@ -415,6 +396,32 @@ const ThreeDTest = (props: Props) => {
     // Rest: lazy load
     return { priority: false, loading: 'lazy' as const };
   };
+
+  // Preload next images for Safari compatibility
+  // useEffect(() => {
+  //   // Preload next 2-3 images when activeIndex changes
+  //   const imagesToPreload = combinedMedia.slice(
+  //     activeIndex + 1,
+  //     activeIndex + 4,
+  //   );
+  //   imagesToPreload.forEach((item) => {
+  //     if (item?.asset) {
+  //       const src = urlFor(item.asset)?.format('webp').url();
+  //       if (src && typeof window !== 'undefined') {
+  //         // Create image element to force browser to fetch
+  //         const img = new Image();
+  //         img.src = src;
+  //       }
+  //     }
+  //   });
+
+  //   return () => {
+  //     imagesToPreload.forEach((img: any) => {
+  //       img.src = '';
+  //     });
+
+  //   }
+  // }, [activeIndex, combinedMedia]);
 
   return (
     <Box

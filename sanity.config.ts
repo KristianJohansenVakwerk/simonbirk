@@ -13,7 +13,18 @@ import { apiVersion, dataset, projectId } from './sanity/env';
 import { schema } from './sanity/schemaTypes';
 import { structure } from './sanity/structure';
 
-import { presentationTool, type DocumentLocation } from 'sanity/presentation';
+import {
+  presentationTool,
+  defineDocuments,
+  defineLocations,
+  type DocumentLocation,
+} from 'sanity/presentation';
+
+// Define the home location for the presentation tool
+const homeLocation = {
+  title: 'Home',
+  href: '/',
+} satisfies DocumentLocation;
 
 function resolveHref(documentType?: string, slug?: string): string | undefined {
   switch (documentType) {
