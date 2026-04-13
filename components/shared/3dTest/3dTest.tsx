@@ -301,6 +301,7 @@ const ThreeDTest = (props: Props) => {
 
     return () => {
       if (!isTouchDevice) {
+        console.log('cleanup');
         window.removeEventListener('keyup', handleKeyUp);
         window.removeEventListener('mousemove', handleMousemove);
       }
